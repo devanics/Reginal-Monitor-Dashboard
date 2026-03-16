@@ -20,7 +20,7 @@ export default function CommoditiesWidget() {
   if (loading) return <div className="p-3 bg-card rounded-lg border border-border animate-pulse h-48"></div>;
 
   return (
-    <div className="flex flex-col gap-2 bg-gray-900 h-40 overflow-scroll rounded-lg p-1">
+    <div className="flex flex-col gap-2 bg-gray-900 overflow-scroll rounded-lg p-1">
       <h2 className="text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase px-1">Commodities</h2>
       <div className="grid grid-cols-2 gap-2">
         {data.map((item) => {

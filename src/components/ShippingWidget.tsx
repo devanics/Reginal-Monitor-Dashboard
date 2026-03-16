@@ -28,7 +28,7 @@ export default function ShippingWidget() {
   if (error) return <div className="p-3 bg-card rounded-lg border border-border text-red-400 text-[10px]">API key missing</div>;
 
   return (
-    <div className="flex flex-col gap-2 bg-gray-900 h-40 overflow-scroll rounded-lg p-1">
+    <div className="flex flex-col gap-2 bg-gray-900 overflow-scroll rounded-lg p-1">
       <h2 className="text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase px-1">Shipping</h2>
       <div className="flex flex-col gap-2 flex-grow">
         {data.map((item) => {
