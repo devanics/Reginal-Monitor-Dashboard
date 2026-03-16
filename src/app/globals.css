@@ -1,18 +1,135 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0d1117;
-  --color-foreground: #e6edf3;
-  --color-card: #161b22;
-  --color-card-hover: #21262d;
-  --color-border: #30363d;
+  --color-background: #0a0a0a;
+  --color-foreground: #e8e8e8;
+  --color-card: #141414;
+  --color-card-hover: #1e1e1e;
+  --color-border: #2a2a2a;
   
-  --color-green-400: #4ade80;
-  --color-red-400: #f87171;
+  --color-semantic-critical: #ff4444;
+  --color-semantic-high: #ff8800;
+  --color-semantic-elevated: #ffaa00;
+  --color-semantic-normal: #44aa44;
+  --color-status-live: #44ff88;
+}
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --border: #2a2a2a;
+  --text: #e8e8e8;
+  --text-dim: #888;
+  --accent: #fff;
+  
+  --semantic-critical: #ff4444;
+  --semantic-high: #ff8800;
+  --semantic-elevated: #ffaa00;
+  --semantic-normal: #44aa44;
+  --status-live: #44ff88;
+
+  --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'Fira Code', monospace;
+  
+  --overlay-light: rgba(255, 255, 255, 0.05);
+  --overlay-medium: rgba(255, 255, 255, 0.1);
+  --overlay-heavy: rgba(255, 255, 255, 0.2);
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
+
+/* Dashboard Layout Grid */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 12px;
+  gap: 12px;
+}
+
+.top-nav {
+  display: grid;
+  grid-template-columns: 180px 100px 1fr 180px 120px;
+  gap: 8px;
+  height: 40px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.secondary-nav {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr 1fr 1fr;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1.2fr;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+/* Widget Base Styles */
+.widget-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--overlay-light);
+  border-bottom: 1px solid var(--border);
+}
+
+.widget-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.widget-content {
+  padding: 12px;
+  flex: 1;
+}
+
+/* Common UI Elements */
+.badge {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.badge-live { background: rgba(68, 255, 136, 0.2); color: var(--status-live); }
+.badge-new { background: #fff; color: #000; }
+.badge-crit { background: rgba(255, 68, 68, 0.2); color: var(--semantic-critical); }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #444; }

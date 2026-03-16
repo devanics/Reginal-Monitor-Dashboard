@@ -7,12 +7,18 @@ const ReginalNews = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        fetch('/api/regionalNews')
-            .then((res) => res.json())
-            .then((data) => {
-                setRegionalNews(data);
-                setIsLoading(false)
-            });
+        const fetchData = () => {
+            fetch('/api/regionalNews')
+                .then((res) => res.json())
+                .then((data) => {
+                    setRegionalNews(data);
+                    setIsLoading(false)
+                });
+        };
+
+        fetchData();
+        const interval = setInterval(fetchData, 300000);
+        return () => clearInterval(interval);
     }, []);
 
     if (isLoading) return <div>Loading...</div>

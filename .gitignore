@@ -42,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+worldmonitor_open_source
+worldmonitor_open_source/
+/worldmonitor_open_source
