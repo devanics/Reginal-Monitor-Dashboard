@@ -38,7 +38,7 @@ export default function PipelineWidget() {
         </div>
         <span className="badge badge-normal">{pipelines.length} MONITORED</span>
       </div>
-      <div className="widget-content flex flex-col gap-3">
+      <div className=" flex flex-col gap-3 bg-gray-900 h-40 overflow-scroll rounded-lg p-1">
         {pipelines.map(p => (
           <div key={p.id} className="p-3 bg-white/5 rounded flex flex-col gap-2">
             <div className="flex justify-between items-center">
