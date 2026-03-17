@@ -28,7 +28,7 @@ const KSANewsSummary = () => {
         <div className="widget-card !bg-blue-900/20 border-blue-500/30">
             <div className="flex items-center justify-between px-3 py-2 border-b border-white/5 bg-blue-900/40">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-blue-200">AI Summary of News for KSA</span>
-                <span className="text-[9px] text-blue-300 opacity-70">refreshed 1m</span>
+                <span className="text-[9px] text-blue-300 opacity-70">refreshed 5m</span>
             </div>
             <div className="p-3 text-[12px] leading-relaxed">
                 {isLoading ? (
