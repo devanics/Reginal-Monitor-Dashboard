@@ -54,7 +54,7 @@ export default function StrikesMissilesGraph() {
   if (loading) return <div className="widget-card animate-pulse h-64 bg-white/5"></div>;
 
   const width = 300;
-  const height = 480;
+  const height = 160;
   const padding = 20;
 
   // Reduce minimum maxVal from 20 to 6 so small numbers don't get squashed at the bottom
@@ -63,8 +63,7 @@ export default function StrikesMissilesGraph() {
   const getPoints = (key: 'strikes' | 'air') => {
     return data.map((d, i) => {
       const x = padding + (i / (data.length - 1)) * (width - padding * 2);
-      // Give it slightly more vertical space usage
-      const y = height - padding - (d[key] / maxVal) * (height - padding * 1.5);
+      const y = padding + (1 - d[key] / maxVal) * (height - padding * 2);
       return `${x},${y}`;
     }).join(' ');
   };
@@ -94,7 +93,7 @@ export default function StrikesMissilesGraph() {
         <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
           {/* Grid lines and Y-axis labels */}
           {[1, 0.75, 0.5, 0.25, 0].map((p) => {
-            const y = height - padding - (p) * (height - padding * 1.5);
+            const y = padding + (1 - p) * (height - padding * 2);
             const val = Math.round(p * maxVal);
             return (
               <g key={p}>
@@ -164,13 +163,13 @@ export default function StrikesMissilesGraph() {
             <>
               <circle
                 cx={padding + (data.length - 1) / (data.length - 1) * (width - padding * 2)}
-                cy={height - padding - (data[data.length - 1].strikes / maxVal) * (height - padding * 1.5)}
+                cy={padding + (1 - data[data.length - 1].strikes / maxVal) * (height - padding * 2)}
                 r="3"
                 fill="#ef4444"
               />
               <circle
                 cx={padding + (data.length - 1) / (data.length - 1) * (width - padding * 2)}
-                cy={height - padding - (data[data.length - 1].air / maxVal) * (height - padding * 1.5)}
+                cy={padding + (1 - data[data.length - 1].air / maxVal) * (height - padding * 2)}
                 r="3"
                 fill="#3b82f6"
               />
@@ -189,3 +188,5 @@ export default function StrikesMissilesGraph() {
     </div>
   );
 }
+
+

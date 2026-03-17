@@ -24,6 +24,7 @@ import RegionalLatestFeed from "@/components/RegionalLatestFeed";
 import RegionalStrikesGraph from "@/components/RegionalStrikesGraph";
 import HormuzStatusWidget from "@/components/HormuzStatusWidget";
 import RegionalAirportsWidget from "@/components/RegionalAirportsWidget";
+import RegionalCountryInstability from "@/components/RegionalCountryInstability";
 
 
 export default function Home() {
@@ -114,8 +115,9 @@ export default function Home() {
                   <CountryInstability />
                   <div className="scale-90 origin-top flex flex-col gap-3">
                      <KSANewsFeed />
-                     <StrikesMissilesGraph />
+                     
                      <StrategicPosture />
+                     <StrikesMissilesGraph />
                   </div>
                </div>
             </div>
@@ -156,7 +158,7 @@ export default function Home() {
 
                   {/* Right: Country Instability → Strait of Hormuz → Airports */}
                   <div className="flex flex-col gap-3">
-                     <CountryInstability />
+                     <RegionalCountryInstability />
                      <HormuzStatusWidget />
                      <RegionalAirportsWidget />
                   </div>

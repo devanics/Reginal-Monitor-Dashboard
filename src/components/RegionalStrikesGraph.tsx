@@ -50,7 +50,7 @@ export default function RegionalStrikesGraph() {
   if (loading) return <div className="widget-card animate-pulse h-64 bg-white/5" />;
 
   const width = 300;
-  const height = 220;
+  const height = 160;
   const padding = 20;
 
   const maxVal = Math.max(...data.map(d => Math.max(d.strikes, d.air)), 6);
@@ -59,7 +59,7 @@ export default function RegionalStrikesGraph() {
     data
       .map((d, i) => {
         const x = padding + (i / (data.length - 1)) * (width - padding * 2);
-        const y = height - padding - (d[key] / maxVal) * (height - padding * 1.5);
+        const y = padding + (1 - d[key] / maxVal) * (height - padding * 2);
         return `${x},${y}`;
       })
       .join(' ');
@@ -96,7 +96,7 @@ export default function RegionalStrikesGraph() {
         <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
           {/* Grid lines */}
           {[1, 0.75, 0.5, 0.25, 0].map(p => {
-            const y = height - padding - (p) * (height - padding * 1.5);
+            const y = padding + (1 - p) * (height - padding * 2);
             const val = Math.round(p * maxVal);
             return (
               <g key={p}>
@@ -137,12 +137,12 @@ export default function RegionalStrikesGraph() {
             <>
               <circle
                 cx={padding + (data.length - 1) / (data.length - 1) * (width - padding * 2)}
-                cy={height - padding - (data[data.length - 1].strikes / maxVal) * (height - padding * 1.5)}
+                cy={padding + (1 - data[data.length - 1].strikes / maxVal) * (height - padding * 2)}
                 r="3" fill="#ef4444"
               />
               <circle
                 cx={padding + (data.length - 1) / (data.length - 1) * (width - padding * 2)}
-                cy={height - padding - (data[data.length - 1].air / maxVal) * (height - padding * 1.5)}
+                cy={padding + (1 - data[data.length - 1].air / maxVal) * (height - padding * 2)}
                 r="3" fill="#3b82f6"
               />
             </>
