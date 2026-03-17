@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import CommoditiesWidget from "@/components/CommoditiesWidget";
 import CryptoWidget from "@/components/CryptoWidget";
 import ShippingWidget from "@/components/ShippingWidget";
-import PipelineWidget from "@/components/PipelineWidget";
 import MarketsWidget from "@/components/MarketsWidget";
 import { LiveStreamPlayer } from '@/components/TVLiveStreamingg';
 import RegionalSummary from "@/components/RegionalSummary";
+import RegionalSummaryRegion from "@/components/RegionalSummaryRegion";
 
 import KSANewsSummary from "@/components/KSANewsSummary";
 import KSAMap from "@/components/KSAMap";
@@ -133,12 +133,12 @@ export default function Home() {
             <div className="column flex flex-col gap-3">
                {/* Section header */}
                <div className="widget-header !bg-orange-900/40 border-orange-500/50">
-                  <span className="widget-title">REGIONAL SEGMENT</span>
-                  <span className="text-[9px] text-orange-400 font-bold uppercase tracking-widest">MENA OVERVIEW</span>
+                  <span className="widget-title">REGIONAL</span>
+                  <span className="text-[9px] text-orange-400 font-bold uppercase tracking-widest">AI Summary of News of Regional (Refreshed 5 mins)</span>
                </div>
 
                {/* Row 1: Regional News Banner */}
-               <RegionalNewsBanner />
+               <RegionalSummaryRegion/>
 
                {/* Row 2: Strategic Risk | Latest Regional Feed */}
                <div className="grid grid-cols-2 gap-3">

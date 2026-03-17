@@ -25,7 +25,7 @@ export default function RegionalSummaryRegion() {
 
     return (
         <div className="flex flex-col gap-6 ">
-            <span className="text-[10px] text-gray-500 font-bold uppercase w-16 px-2 border-r border-white/10">Regional</span>
+            <span className="text-[10px] text-gray-500 font-bold uppercase w-16 px-2 border-r border-white/10"></span>
             <div className="text-[11px] leading-tight text-white/90">
                 {summary}
             </div>

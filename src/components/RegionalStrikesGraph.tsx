@@ -50,7 +50,7 @@ export default function RegionalStrikesGraph() {
   if (loading) return <div className="widget-card animate-pulse h-64 bg-white/5" />;
 
   const width = 300;
-  const height = 230;
+  const height = 220;
   const padding = 20;
 
   const maxVal = Math.max(...data.map(d => Math.max(d.strikes, d.air)), 6);
