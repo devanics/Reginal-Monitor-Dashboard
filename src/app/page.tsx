@@ -9,6 +9,7 @@ import MarketsWidget from "@/components/MarketsWidget";
 import { LiveStreamPlayer } from '@/components/TVLiveStreamingg';
 import RegionalSummary from "@/components/RegionalSummary";
 import ConflictStatus from "@/components/ReginalNews/KSA-ConflictStatus/ConflictStatus";
+import CountryWarStatus from "@/components/CountryWarStatus";
 import KSANewsSummary from "@/components/KSANewsSummary";
 import KSAMap from "@/components/KSAMap";
 import KSANewsFeed from "@/components/KSANewsFeed";
@@ -71,6 +72,7 @@ export default function Home() {
         </div>
       </nav>
 
+        
          {/* Secondary Meta Nav */}
          <div className="secondary-nav">
             <RegionalSummary />
@@ -189,6 +191,7 @@ export default function Home() {
                </div>
 
                <ConflictStatus />
+               
             </div>
          </main>
 

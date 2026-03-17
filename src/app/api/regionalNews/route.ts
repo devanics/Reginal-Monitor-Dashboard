@@ -5,11 +5,8 @@ export async function GET() {
   try {
     // 1. fetch latest news
     const news = await fetch(
-      `https://newsapi.org/v2/everything?q=war OR conflict OR military`,
+      `https://newsdata.io/api/1/latest?apikey=${process.env.NEWSDATA_API_KEY}&country=ir,sa,il&q=war+OR+conflict+OR+clashes+OR+attack+OR+battle+OR+violence+OR+strike+OR+hezbollah+OR+hamas+OR+yemen`,
       {
-        headers: {
-          Authorization: `Bearer ${process.env.NEWS_API_KEY}`
-        },
         next: { revalidate: 900 } // refresh every 15 minutes
       }
     );
@@ -19,7 +16,7 @@ export async function GET() {
     }
 
     const data = await news.json();
-    const articles = (data.articles || []).slice(0, 5).map((a: any) => a.title).join("\n");
+    const articles = (data.results || []).slice(0, 5).map((a: any) => a.title).join("\n");
 
     if (!articles) {
       return NextResponse.json({ summary: "No recent conflict news found. 🟢" });
@@ -64,4 +61,4 @@ export async function GET() {
       { status: 200 } // Returning 200 with fallback to avoid crashing the dashboard
     );
   }
-}
+}

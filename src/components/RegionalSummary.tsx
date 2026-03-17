@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import CountryWarStatus from './CountryWarStatus';
 
 export default function RegionalSummary() {
   const [summary, setSummary] = useState<string>("Syncing regional intelligence... 🟡");
@@ -23,11 +24,12 @@ export default function RegionalSummary() {
   }, []);
 
   return (
-    <div className="flex items-center gap-4 bg-white/5 p-2 rounded border border-white/10 min-w-[300px]">
+    <div className="flex flex-col gap-6 ">
       <span className="text-[10px] text-gray-500 font-bold uppercase w-16 px-2 border-r border-white/10">Regional</span>
       <div className="text-[11px] leading-tight text-white/90">
         {summary}
       </div>
+      <CountryWarStatus />
     </div>
   );
 }
