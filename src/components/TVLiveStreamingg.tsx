@@ -122,7 +122,7 @@ const REGIONS: { key: RegionKey; label: string }[] = [
 ];
 
 // Grid: default 4 webcams shown in 2×2 when region = "all"
-const DEFAULT_GRID_IDS = ['jerusalem', 'kyiv', 'washington', 'taipei'];
+const DEFAULT_GRID_IDS = ['tehran'];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SETTINGS HELPERS  (localStorage, no external deps)

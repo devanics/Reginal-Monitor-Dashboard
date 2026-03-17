@@ -36,7 +36,7 @@ export default function StrategicPosture() {
   if (loading) return <div className="widget-card animate-pulse h-[300px] bg-white/5"></div>;
 
   return (
-    <div className="widget-card h-full flex flex-col">
+    <div className="widget-card h-60 flex flex-col">
       <div className="widget-header">
         <div className="flex items-center gap-2">
           <span className="widget-title">AI STRATEGIC POSTURE</span>
@@ -46,7 +46,7 @@ export default function StrategicPosture() {
       </div>
       <div className="widget-content flex flex-col gap-3 overflow-y-auto flex-1 custom-scrollbar">
         {theaters.map((theater) => (
-          <div 
+          <div
             key={theater.id}
             className={`p-3 rounded border-l-4 flex flex-col gap-2 transition-all hover:bg-white/5 cursor-pointer
               ${theater.status === 'critical' ? 'bg-red-500/5 border-red-500' : (theater.status === 'elevated' ? 'bg-orange-500/5 border-orange-500' : 'bg-white/5 border-gray-700')}`}
@@ -57,7 +57,7 @@ export default function StrategicPosture() {
                 {theater.status.toUpperCase()}
               </span>
             </div>
-            
+
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-4 text-[10px] text-gray-400">
                 <span className="uppercase tracking-wider w-8">Air</span>
@@ -78,7 +78,7 @@ export default function StrategicPosture() {
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center gap-1 text-[10px] text-gray-500 mt-1">
               <span>+</span>
               <span>stable</span>
@@ -87,8 +87,8 @@ export default function StrategicPosture() {
         ))}
       </div>
       <div className="flex justify-between items-center px-3 py-2 border-t border-white/5 text-[9px] text-gray-500 bg-black/20">
-         <span>DATA REFRESH: {new Date(timestamp).toLocaleTimeString()}</span>
-         <button className="hover:text-white transition-colors" onClick={() => setLoading(true)}>↻</button>
+        <span>DATA REFRESH: {new Date(timestamp).toLocaleTimeString()}</span>
+        <button className="hover:text-white transition-colors" onClick={() => setLoading(true)}>↻</button>
       </div>
     </div>
   );

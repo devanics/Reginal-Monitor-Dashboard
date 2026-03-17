@@ -111,13 +111,14 @@ export default function Home() {
 
                {/* Row 3: 3 Columns - Country Instability | Live News Feed | AI Strategic Posture */}
                <div className="grid grid-cols-2 gap-3">
-                  <CountryInstability />
-                  
-                     <KSANewsFeed />
+                  <div>
+                     <CountryInstability />
+                  </div>
+                  <div>
                      <StrikesMissilesGraph />
+                     <KSANewsFeed />
                      <StrategicPosture />
-                     
-                  
+                  </div>
                </div>
             </div>
 
@@ -132,32 +133,29 @@ export default function Home() {
 
             {/* Right Column: Regional Segment */}
             <div className="column flex flex-col gap-3">
-               {/* Section header */}
-               <div className="widget-header !bg-orange-900/40 border-orange-500/50">
-                  <span className="widget-title">REGIONAL</span>
-                  <span className="text-[9px] text-orange-400 font-bold uppercase tracking-widest">AI Summary of News of Regional (Refreshed 5 mins)</span>
-               </div>
+               <div className="grid grid-cols-2 gap-3" >
+                  <RegionalSummaryRegion />
+                  <StrategicRisk />
 
-               {/* Row 1: Regional News Banner */}
-               <RegionalSummaryRegion/>
+               </div>
 
                {/* Row 2: Strategic Risk | Latest Regional Feed */}
                <div className="grid grid-cols-2 gap-3">
-                  <StrategicRisk />
                   <RegionalLatestFeed />
+                  <RegionalCountryInstability />
+
                </div>
 
                {/* Row 3+4: Left col = Strikes Graph + AI Posture | Right col = Instability + Hormuz + Airports */}
                <div className="grid grid-cols-2 gap-3">
                   {/* Left: Strikes → AI Strategic Posture */}
                   <div className="flex flex-col gap-3">
-                    <RegionalStrikesGraph/>
+                     <RegionalStrikesGraph />
                      <StrategicPosture />
                   </div>
 
                   {/* Right: Country Instability → Strait of Hormuz → Airports */}
                   <div className="flex flex-col gap-3">
-                     <RegionalCountryInstability />
                      <HormuzStatusWidget />
                      <RegionalAirportsWidget />
                   </div>
