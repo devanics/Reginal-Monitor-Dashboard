@@ -102,6 +102,8 @@ export default function Home() {
                   <StrategicRisk />
 
                </div>
+
+               {/* Row 3: 3 Columns - Country Instability | Live News Feed | AI Strategic Posture */}
                <div className="grid grid-cols-3 gap-3">
                   <CountryInstability />
                   <KSANewsFeed />
