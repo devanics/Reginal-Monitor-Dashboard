@@ -47,34 +47,34 @@ const KSANewsFeed = () => {
   };
 
   return (
-    <div className="widget-card border-l-0 border-r-0 rounded-none bg-transparent flex flex-col h-full">
+    <div className="widget-card h-60 border-l-0 border-r-0 rounded-none bg-transparent flex flex-col">
       <div className="flex items-center justify-between px-3 py-1 bg-white/5 border-b border-white/5">
         <div className="flex items-center gap-2">
-           <span className="text-[9px] font-bold text-gray-500 uppercase">Live KSA Feed</span>
-           {/* <div className="flex items-center gap-1">
+          <span className="text-[9px] font-bold text-gray-500 uppercase">Live KSA Feed</span>
+          {/* <div className="flex items-center gap-1">
               <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
               <span className="text-[10px] font-bold text-yellow-500">SCORE: 68</span>
            </div> */}
         </div>
         <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
       </div>
-      
+
       <div className="p-2 bg-yellow-500/5 border-b border-white/5">
-         <div className="text-[9px] text-gray-400 font-bold uppercase mb-1">Status Summary</div>
-         <div className="text-[10px] leading-tight text-white italic">"Elevated activity near western borders; commercial hubs remain stable."</div>
+        <div className="text-[9px] text-gray-400 font-bold uppercase mb-1">Status Summary</div>
+        <div className="text-[10px] leading-tight text-white italic">"Elevated activity near western borders; commercial hubs remain stable."</div>
       </div>
 
       <div className="widget-content !p-0 flex-1 overflow-y-auto">
         {isLoading ? (
-           <div className="p-3 text-[10px] text-gray-500">Syncing feed...</div>
+          <div className="p-3 text-[10px] text-gray-500">Syncing feed...</div>
         ) : (
           <div className="flex flex-col">
             {data.map((item) => (
               <div key={item.id} className="p-2 border-b border-white/5 flex gap-2 items-start hover:bg-white/5 transition-colors cursor-pointer">
                 <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${getStatusColor(item.status)} shadow-[0_0_5px_rgba(0,0,0,0.5)]`}></div>
                 <div className="flex flex-col gap-0.5">
-                   <div className="text-[10px] leading-tight text-gray-200">{item.title}</div>
-                   <div className="text-[8px] text-gray-500">{item.time}</div>
+                  <div className="text-[10px] leading-tight text-gray-200">{item.title}</div>
+                  <div className="text-[8px] text-gray-500">{item.time}</div>
                 </div>
               </div>
             ))}
