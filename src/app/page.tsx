@@ -19,7 +19,6 @@ import EscalationProbability from "@/components/EscalationProbability";
 import PizzaIndexModal from "@/components/PizzaIndexModal";
 import StrikesMissilesGraph from "@/components/StrikesMissilesGraph";
 import OilPrices from "@/components/OilPrices";
-import RegionalNewsBanner from "@/components/RegionalNewsBanner";
 import RegionalLatestFeed from "@/components/RegionalLatestFeed";
 import RegionalStrikesGraph from "@/components/RegionalStrikesGraph";
 import HormuzStatusWidget from "@/components/HormuzStatusWidget";
@@ -113,12 +112,12 @@ export default function Home() {
                {/* Row 3: 3 Columns - Country Instability | Live News Feed | AI Strategic Posture */}
                <div className="grid grid-cols-2 gap-3">
                   <CountryInstability />
-                  <div className="scale-90 origin-top flex flex-col gap-3">
+                  
                      <KSANewsFeed />
-                     
-                     <StrategicPosture />
                      <StrikesMissilesGraph />
-                  </div>
+                     <StrategicPosture />
+                     
+                  
                </div>
             </div>
 
@@ -152,7 +151,7 @@ export default function Home() {
                <div className="grid grid-cols-2 gap-3">
                   {/* Left: Strikes → AI Strategic Posture */}
                   <div className="flex flex-col gap-3">
-                     <RegionalStrikesGraph />
+                    <RegionalStrikesGraph/>
                      <StrategicPosture />
                   </div>
 
