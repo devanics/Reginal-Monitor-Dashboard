@@ -44,7 +44,7 @@ export default function StrategicPosture() {
         </div>
         <span className="badge badge-new">{theaters.length} AREAS</span>
       </div>
-      <div className="widget-content flex flex-col gap-3 overflow-y-auto max-h-[300px]">
+      <div className="widget-content flex flex-col gap-3 overflow-y-auto flex-1 custom-scrollbar">
         {theaters.map((theater) => (
           <div 
             key={theater.id}

@@ -8,8 +8,7 @@ import PipelineWidget from "@/components/PipelineWidget";
 import MarketsWidget from "@/components/MarketsWidget";
 import { LiveStreamPlayer } from '@/components/TVLiveStreamingg';
 import RegionalSummary from "@/components/RegionalSummary";
-import ConflictStatus from "@/components/ReginalNews/KSA-ConflictStatus/ConflictStatus";
-import CountryWarStatus from "@/components/CountryWarStatus";
+
 import KSANewsSummary from "@/components/KSANewsSummary";
 import KSAMap from "@/components/KSAMap";
 import KSANewsFeed from "@/components/KSANewsFeed";
@@ -20,6 +19,11 @@ import EscalationProbability from "@/components/EscalationProbability";
 import PizzaIndexModal from "@/components/PizzaIndexModal";
 import StrikesMissilesGraph from "@/components/StrikesMissilesGraph";
 import OilPrices from "@/components/OilPrices";
+import RegionalNewsBanner from "@/components/RegionalNewsBanner";
+import RegionalLatestFeed from "@/components/RegionalLatestFeed";
+import RegionalStrikesGraph from "@/components/RegionalStrikesGraph";
+import HormuzStatusWidget from "@/components/HormuzStatusWidget";
+import RegionalAirportsWidget from "@/components/RegionalAirportsWidget";
 
 
 export default function Home() {
@@ -126,49 +130,38 @@ export default function Home() {
             </div>
 
             {/* Right Column: Regional Segment */}
-            <div className="column">
+            <div className="column flex flex-col gap-3">
+               {/* Section header */}
                <div className="widget-header !bg-orange-900/40 border-orange-500/50">
                   <span className="widget-title">REGIONAL SEGMENT</span>
+                  <span className="text-[9px] text-orange-400 font-bold uppercase tracking-widest">MENA OVERVIEW</span>
                </div>
 
-               <div className="widget-card min-h-[250px] relative bg-gray-900 overflow-hidden">
-                  <div className="absolute top-2 left-2 z-10 bg-black/60 p-2 rounded text-[10px]">
-                     REGIONAL THREAT MAP
-                  </div>
-                  <div className="w-full h-full bg-[radial-gradient(circle_at_center,_#2a2a2a_0%,_transparent_100%)] opacity-30 flex items-center justify-center">
-                     <span className="text-gray-700 text-xs">THREAT CORRELATION MAP</span>
-                  </div>
+               {/* Row 1: Regional News Banner */}
+               <RegionalNewsBanner />
+
+               {/* Row 2: Strategic Risk | Latest Regional Feed */}
+               <div className="grid grid-cols-2 gap-3">
+                  <StrategicRisk />
+                  <RegionalLatestFeed />
                </div>
 
-               <StrategicPosture />
-
-               <div className="widget-card p-3 bg-red-950/20 border-red-900/50">
-                  <div className="flex justify-between items-center mb-2">
-                     <span className="text-[10px] font-bold uppercase text-red-400">Strait of Hormuz Status</span>
-                     <span className="text-[9px] bg-red-500 text-white px-2 py-0.5 rounded">CONGESTED</span>
+               {/* Row 3+4: Left col = Strikes Graph + AI Posture | Right col = Instability + Hormuz + Airports */}
+               <div className="grid grid-cols-2 gap-3">
+                  {/* Left: Strikes → AI Strategic Posture */}
+                  <div className="flex flex-col gap-3">
+                     <RegionalStrikesGraph />
+                     <StrategicPosture />
                   </div>
-                  <div className="text-[11px] text-gray-400">Increased naval presence causing major shipping delays. Risk of closure: 15%</div>
-               </div>
 
-               <div className="widget-card p-3">
-                  <span className="text-[10px] font-bold uppercase text-gray-500 block mb-2">Regional Major Airports</span>
-                  <div className="flex flex-col gap-2">
-                     <div className="flex justify-between text-[11px]">
-                        <span>DXB (Dubai)</span>
-                        <span className="text-green-500">OPERATIONAL</span>
-                     </div>
-                     <div className="flex justify-between text-[11px]">
-                        <span>DOH (Doha)</span>
-                        <span className="text-green-500">OPERATIONAL</span>
-                     </div>
-                     <div className="flex justify-between text-[11px]">
-                        <span>TLV (Tel Aviv)</span>
-                        <span className="text-yellow-500">DELAYS</span>
-                     </div>
+                  {/* Right: Country Instability → Strait of Hormuz → Airports */}
+                  <div className="flex flex-col gap-3">
+                     <CountryInstability />
+                     <HormuzStatusWidget />
+                     <RegionalAirportsWidget />
                   </div>
                </div>
 
-               <ConflictStatus />
 
             </div>
          </main>
