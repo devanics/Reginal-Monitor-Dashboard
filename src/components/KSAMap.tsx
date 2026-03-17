@@ -28,12 +28,7 @@ export default function KSAMap() {
   const geojsonUrl = `/api/military-activity?v=${refreshKey}`;
 
   return (
-    <div className="widget-card flex flex-col min-h-[300px] bg-gray-900 overflow-hidden relative border-blue-500/20 h-full">
-      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
-        <div className="bg-black/70 px-2 py-1 rounded text-[9px] font-bold text-blue-300 border border-blue-500/30 backdrop-blur-md">
-          KSA TACTICAL OVERLAY [3D]
-        </div>
-      </div>
+    <div className="widget-card">
 
       <div className="absolute bottom-2 right-2 z-10 flex flex-col gap-1 text-[8px] text-gray-500 font-mono bg-black/50 p-1.5 rounded border border-white/5 backdrop-blur-sm">
         <div className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-400"></span> MILITARY ASSETS</div>
