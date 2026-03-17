@@ -1,8 +1,11 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import CommoditiesWidget from "@/components/CommoditiesWidget";
 import CryptoWidget from "@/components/CryptoWidget";
 import ShippingWidget from "@/components/ShippingWidget";
 import PipelineWidget from "@/components/PipelineWidget";
-import StocksWidget from "@/components/StocksWidget";
+import MarketsWidget from "@/components/MarketsWidget";
 import { LiveStreamPlayer } from '@/components/TVLiveStreamingg';
 import RegionalSummary from "@/components/RegionalSummary";
 import ConflictStatus from "@/components/ReginalNews/KSA-ConflictStatus/ConflictStatus";
@@ -12,42 +15,68 @@ import KSANewsFeed from "@/components/KSANewsFeed";
 import StrategicPosture from "@/components/StrategicPosture";
 import StrategicRisk from "@/components/StrategicRisk";
 import CountryInstability from "@/components/CountryInstability";
+import EscalationProbability from "@/components/EscalationProbability";
+import PizzaIndexModal from "@/components/PizzaIndexModal";
+
 
 export default function Home() {
-   const currentTime = new Date().toLocaleString();
+  const [isPizzaModalOpen, setIsPizzaModalOpen] = useState(false);
+  const [pizzaData, setPizzaData] = useState<any>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-   return (
-      <div className="dashboard-container">
-         {/* Top Nav Row */}
-         <nav className="top-nav text-[10px] font-bold">
-            <div className="flex items-center gap-2">
-               <span className="text-lg tracking-[0.2em]">OVERWATCH.LIVE</span>
-            </div>
-            <div className="border border-white/20 px-3 py-1 bg-white/5 flex items-center justify-center">
-               DEFCON 3
-            </div>
-            <div className="flex items-center gap-3 px-4 border-l border-white/10">
-               <span className="text-gray-500 uppercase tracking-widest">Predictions:</span>
-               <span className="text-white">REGIONAL ESCALATION PROBABILITY (74%)</span>
-            </div>
-            <div className="flex items-center justify-end px-4 border-l border-white/10">
-               {currentTime.split(',')[1]}
-            </div>
-            <div className="flex items-center gap-2 px-4 border-l border-white/10">
-               <span className="text-gray-500">APIs:</span>
-               <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                  <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
-               </div>
-            </div>
-         </nav>
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+     fetch('/api/pizza-index')
+      .then(res => res.json())
+      .then(setPizzaData)
+      .catch(console.error);
+  }, []);
+
+  return (
+    <div className="dashboard-container">
+      {/* Top Nav Row */}
+      <nav className="top-nav text-[10px] font-bold">
+        <div className="flex items-center gap-2 min-w-[200px]">
+          <span className="text-lg tracking-[0.2em] whitespace-nowrap">OVERWATCH.LIVE</span>
+        </div>
+        <div 
+          className="flex items-center gap-2 bg-black px-3 py-1.5 border border-white/20 rounded-sm cursor-pointer hover:bg-white/10 transition-colors ml-8"
+          onClick={() => setIsPizzaModalOpen(true)}
+        >
+          <span className="text-xl">🍕</span>
+          <div className="flex flex-col leading-none">
+             <span className={`text-[10px] font-black ${pizzaData?.defcon === 1 ? 'text-red-500' : 'text-[#4ade80]'}`}>
+               DEFCON {pizzaData?.defcon || 5}
+             </span>
+             <span className="text-gray-500 text-[9px] font-bold">{pizzaData?.activity || 0}% activity</span>
+          </div>
+        </div>
+        <EscalationProbability />
+        <div className="flex items-center justify-end px-4 border-l border-white/10">
+          {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+        </div>
+        <div className="flex items-center gap-2 px-4 border-l border-white/10">
+          <span className="text-gray-500">APIs:</span>
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+          </div>
+        </div>
+      </nav>
 
          {/* Secondary Meta Nav */}
          <div className="secondary-nav">
             <RegionalSummary />
             <PipelineWidget />
             <CommoditiesWidget />
+            <MarketsWidget />
             <div className="widget-card p-2 flex flex-col justify-between">
                <span className="text-[9px] text-gray-500 font-bold uppercase">Economic Indicators</span>
                <div className="flex justify-between items-end">
@@ -162,6 +191,11 @@ export default function Home() {
                <ConflictStatus />
             </div>
          </main>
+
+         <PizzaIndexModal 
+            isOpen={isPizzaModalOpen} 
+            onClose={() => setIsPizzaModalOpen(false)} 
+         />
       </div>
    );
 }

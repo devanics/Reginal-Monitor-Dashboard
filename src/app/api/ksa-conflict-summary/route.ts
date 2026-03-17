@@ -4,7 +4,7 @@ export async function GET() {
     try {
         // Fetch news related to conflicts near KSA
         const newsRes = await fetch(
-            `https://newsapi.org/v2/everything?q=Saudi Arabia OR Middle East war OR Iran Israel conflict`,
+            `https://newsapi.org/v2/everything?q=%2BSaudi%20%2BArabia&sortBy=publishedAt`,
             {
                 headers: {
                     Authorization: `Bearer ${process.env.NEWS_API_KEY}`
@@ -18,30 +18,40 @@ export async function GET() {
         }
 
         const news = await newsRes.json();
+        const articles = (news.articles || [])
+            .filter((a: any) => {
+                const searchStr = `${a.title} ${a.description} ${a.content}`.toLowerCase();
+                return searchStr.includes('saudi') || searchStr.includes('ksa') || searchStr.includes('riyadh');
+            })
+            .slice(0, 8);
 
-        const headlines = (news.articles || [])
-            .slice(0, 5)
+        const headlines = articles
             .map((a: any) => a.title)
             .join("\n");
 
-        if (!headlines) {
-            return Response.json({ summary: "No immediate threats detected near KSA. 🟢" });
+        if (articles.length === 0) {
+            return Response.json({ summary: "No immediate threats detected in KSA. 🟢" });
         }
 
-        // Generate AI summary
+        // Generate AI summary and FILTER for strictly relevant news
         const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+                Authorization: "Bearer " + process.env.OPENAI_API_KEY
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini",
+                response_format: { type: "json_object" },
                 messages: [
                     {
                         role: "system",
                         content:
-                            "Summarize regional war/conflict situation affecting Saudi Arabia in 5-10 words with stoplight emoji (🔴🟡🟢)"
+                            "You are a strict intelligence analyst. Analyze the provided news headlines and respond in JSON format. \n" +
+                            "Output schema: { \"summary\": string, \"relevant_titles\": string[] }\n\n" +
+                            "Rules:\n" +
+                            "1. 'summary': Choose ONLY news where Saudi Arabia (KSA) is the MAIN SUBJECT. Summarize the Saudi-specific situation in 5-10 words with a stoplight emoji (🔴🟡🟢). If no strictly relevant news, summary should be 'No immediate threats detected in KSA. 🟢'.\n" +
+                            "2. 'relevant_titles': An array of titles from the provided list that are strictly and primarily about Saudi Arabia's security, economy, or direct impact. Exclude news mostly about other countries or general regional tensions unless KSA is the protagonist."
                     },
                     {
                         role: "user",
@@ -56,17 +66,24 @@ export async function GET() {
         }
 
         const ai = await aiRes.json();
-        const summary = ai.choices?.[0]?.message?.content || "KSA conflict summary currently unavailable. 🟡";
+        const aiData = JSON.parse(ai.choices?.[0]?.message?.content || "{}");
+        const summary = aiData.summary || "KSA conflict summary currently unavailable. 🟡";
+        const relevantTitles = aiData.relevant_titles || [];
+
+        // Filter the keyword-filtered articles further by AI's relevance choice
+        const filteredArticles = articles.filter((a: any) => 
+            relevantTitles.includes(a.title)
+        );
 
         return Response.json({
             summary,
-            articles: news.articles || []
+            articles: filteredArticles
         });
     } catch (error) {
         console.error("Error in KSA conflict summary API:", error);
         return Response.json(
-            { summary: "KSA conflict summary currently unavailable. 🟡" },
-            { status: 200 } // Returning 200 with fallback
+            { summary: "KSA conflict summary currently unavailable. 🟡", articles: [] },
+            { status: 200 }
         );
     }
 }
