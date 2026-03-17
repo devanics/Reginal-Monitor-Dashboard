@@ -25,7 +25,7 @@ export async function GET() {
   try {
     const res = await fetch('https://api.oilpriceapi.com/v1/prices/latest', {
       headers: {
-        Authorization: `Token ${process.env.OIL_PRICE_API_KEY}`,
+        Authorization: `Token 7f6297a53705cc6918ee171762da2ac8cde3b19137f29f21b97271953e419785`,
       },
       next: { revalidate: 300 }, // refresh every 5 minutes
     });
