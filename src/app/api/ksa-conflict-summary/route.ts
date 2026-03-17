@@ -4,7 +4,7 @@ export async function GET() {
     try {
         // Fetch news related to conflicts near KSA
         const newsRes = await fetch(
-            `https://newsapi.org/v2/everything?q=Saudi Arabia OR Middle East war OR Iran Israel conflict`,
+            `https://newsapi.org/v2/everything?q=Saudi Arabia`,
             {
                 headers: {
                     Authorization: `Bearer ${process.env.NEWS_API_KEY}`
@@ -18,22 +18,27 @@ export async function GET() {
         }
 
         const news = await newsRes.json();
+        const articles = (news.articles || [])
+            .filter((a: any) => {
+                const searchStr = `${a.title} ${a.description} ${a.content}`.toLowerCase();
+                return searchStr.includes('saudi') || searchStr.includes('ksa') || searchStr.includes('riyadh');
+            })
+            .slice(0, 8);
 
-        const headlines = (news.articles || [])
-            .slice(0, 5)
+        const headlines = articles
             .map((a: any) => a.title)
             .join("\n");
 
-        if (!headlines) {
-            return Response.json({ summary: "No immediate threats detected near KSA. 🟢" });
+        if (articles.length === 0) {
+            return Response.json({ summary: "No immediate threats detected in KSA. 🟢" });
         }
 
-        // Generate AI summary
+        // Generate AI summary and FILTER for strictly relevant news
         const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+                Authorization: "Bearer " + process.env.OPENAI_API_KEY
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini",
@@ -41,7 +46,7 @@ export async function GET() {
                     {
                         role: "system",
                         content:
-                            "Summarize regional war/conflict situation affecting Saudi Arabia in 5-10 words with stoplight emoji (🔴🟡🟢)"
+                            "You are a filter. From the headlines, choose ONLY those strictly affecting Saudi Arabia directly (domestic security, direct borders). Ignore general Middle East news. Then summarize the situation in 5-10 words with stoplight emoji (🔴🟡🟢). If nothing strictly relevant, say 'No immediate threats detected in KSA. 🟢'"
                     },
                     {
                         role: "user",

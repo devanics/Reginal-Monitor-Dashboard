@@ -12,6 +12,7 @@ import KSANewsFeed from "@/components/KSANewsFeed";
 import StrategicPosture from "@/components/StrategicPosture";
 import StrategicRisk from "@/components/StrategicRisk";
 import CountryInstability from "@/components/CountryInstability";
+import EscalationProbability from "@/components/EscalationProbability";
 
 export default function Home() {
   const currentTime = new Date().toLocaleString();
@@ -26,10 +27,7 @@ export default function Home() {
         <div className="border border-white/20 px-3 py-1 bg-white/5 flex items-center justify-center">
           DEFCON 3
         </div>
-        <div className="flex items-center gap-3 px-4 border-l border-white/10">
-          <span className="text-gray-500 uppercase tracking-widest">Predictions:</span>
-          <span className="text-white">REGIONAL ESCALATION PROBABILITY (74%)</span>
-        </div>
+        <EscalationProbability />
         <div className="flex items-center justify-end px-4 border-l border-white/10">
           {currentTime.split(',')[1]}
         </div>

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const symbols = ['^VIX', 'GC=F', 'CL=F', 'NG=F'];
+  const symbols = ['^VIX', 'GC=F', 'SI=F', 'NG=F'];
   
   try {
     const results = await Promise.all(
@@ -23,7 +23,7 @@ export async function GET() {
         let display = symbol;
         if (symbol === '^VIX') display = 'VIX';
         if (symbol === 'GC=F') display = 'GOLD';
-        if (symbol === 'CL=F') display = 'OIL';
+        if (symbol === 'SI=F') display = 'SILVER';
         if (symbol === 'NG=F') display = 'NATGAS';
 
         const closes = result.indicators?.quote?.[0]?.close;

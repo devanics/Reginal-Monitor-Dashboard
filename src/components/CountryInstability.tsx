@@ -72,12 +72,7 @@ export default function CountryInstability() {
             </div>
         </div>
 
-        {/* Section 2: Intelligence Brief (MOVED UP) */}
-        <div className="mb-8 p-3 bg-white/5 border border-white/5 rounded">
-            <IntelligenceBrief customBrief={data?.brief} />
-        </div>
-
-        {/* Section 3: Active Signals (Image 6) */}
+        {/* Section 2: Active Signals (Image 6) */}
         <div className="mb-8">
             <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Active Signals</div>
             <div className="flex flex-wrap gap-2">
