@@ -51,10 +51,10 @@ const KSANewsFeed = () => {
       <div className="flex items-center justify-between px-3 py-1 bg-white/5 border-b border-white/5">
         <div className="flex items-center gap-2">
            <span className="text-[9px] font-bold text-gray-500 uppercase">Live KSA Feed</span>
-           <div className="flex items-center gap-1">
+           {/* <div className="flex items-center gap-1">
               <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
               <span className="text-[10px] font-bold text-yellow-500">SCORE: 68</span>
-           </div>
+           </div> */}
         </div>
         <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
       </div>

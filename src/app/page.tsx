@@ -19,6 +19,7 @@ import CountryInstability from "@/components/CountryInstability";
 import EscalationProbability from "@/components/EscalationProbability";
 import PizzaIndexModal from "@/components/PizzaIndexModal";
 import StrikesMissilesGraph from "@/components/StrikesMissilesGraph";
+import OilPrices from "@/components/OilPrices";
 
 
 export default function Home() {
@@ -77,10 +78,11 @@ export default function Home() {
          {/* Secondary Meta Nav */}
          <div className="secondary-nav">
             <RegionalSummary />
-            <PipelineWidget />
+            {/* <PipelineWidget /> */}
+            <OilPrices />
             <CommoditiesWidget />
             <MarketsWidget />
-            <div className="widget-card p-2 flex flex-col justify-between">
+            {/* <div className="widget-card p-2 flex flex-col justify-between">
                <span className="text-[9px] text-gray-500 font-bold uppercase">Economic Indicators</span>
                <div className="flex justify-between items-end">
                   <div>
@@ -89,7 +91,7 @@ export default function Home() {
                   </div>
                   <div className="text-[9px] text-red-400">▼ 1.2%</div>
                </div>
-            </div>
+            </div> */}
             <CryptoWidget />
             <ShippingWidget />
          </div>
@@ -103,10 +105,12 @@ export default function Home() {
                   <StrategicRisk />
 
                </div>
-               <div className="grid grid-cols-3 gap-3">
+
+               {/* Row 3: 3 Columns - Country Instability | Live News Feed | AI Strategic Posture */}
+               <div className="grid grid-cols-2 gap-3">
                   <CountryInstability />
-                  <KSANewsFeed />
                   <div className="scale-90 origin-top flex flex-col gap-3">
+                     <KSANewsFeed />
                      <StrikesMissilesGraph />
                      <StrategicPosture />
                   </div>
@@ -136,7 +140,7 @@ export default function Home() {
                      <span className="text-gray-700 text-xs">THREAT CORRELATION MAP</span>
                   </div>
                </div>
-               
+
                <StrategicPosture />
 
                <div className="widget-card p-3 bg-red-950/20 border-red-900/50">
