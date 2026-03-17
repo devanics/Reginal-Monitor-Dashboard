@@ -14,36 +14,32 @@ export default function StrikesMissilesGraph() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const generateMockData = () => {
+      const mock: HistoryPoint[] = [];
+      for (let i = 12; i >= 0; i--) {
+        mock.push({
+          time: `${i}h`,
+          strikes: Math.floor(Math.random() * 10) + 2,
+          air: Math.floor(Math.random() * 5) + 1
+        });
+      }
+      setData(mock);
+    };
+
     const fetchData = async () => {
       try {
         const res = await fetch('/api/strikes-missiles-history');
         const json = await res.json();
-        console.log("Strikes & Air API Response:", json); // Added as requested
         if (json.history && json.history.length > 0) {
           setData(json.history);
         } else {
-          // Fallback if API returns empty
           generateMockData();
         }
-      } catch (error) {
-        console.error("Failed to fetch history:", error);
+      } catch {
         generateMockData();
       } finally {
         setLoading(false);
       }
-    };
-
-    const generateMockData = () => {
-      const mock = [];
-      const now = new Date();
-      for (let i = 12; i >= 0; i--) {
-        mock.push({
-          hourIndex: -Math.floor(i / 2),
-          strikes: Math.floor(Math.random() * 10) + 5,
-          air: Math.floor(Math.random() * 5) + 2
-        });
-      }
-      setData(mock);
     };
 
     fetchData();
@@ -51,139 +47,126 @@ export default function StrikesMissilesGraph() {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) return <div className="widget-card animate-pulse h-48 bg-white/5"></div>;
+  if (loading) return <div className="widget-card animate-pulse bg-white/5 rounded-lg" style={{ height: 200 }} />;
+  if (data.length < 2) return null;
 
-  const width = 300;
-  const height = 120;
-  const padding = 20;
+  const W = 280;
+  const H = 110;
+  const PT = 8;
+  const PB = 20;
+  const PL = 20;
+  const PR = 6;
+  const innerW = W - PL - PR;
+  const innerH = H - PT - PB;
 
-  const maxVal = Math.max(...data.map(d => Math.max(d.strikes, d.air)), 20);
+  // ✅ Always add +2 buffer so even max-value points aren't clipped at top
+  // and 0-value points render as a visible baseline, not invisible edge
+  const rawMax = Math.max(...data.map(d => Math.max(d.strikes, d.air)));
+  const maxVal = Math.max(rawMax + 2, 8);
 
-  const getPoints = (key: 'strikes' | 'air') => {
-    return data.map((d, i) => {
-      const x = padding + (i / (data.length - 1)) * (width - padding * 2);
-      const y = height - padding - (d[key] / maxVal) * (height - padding * 2);
-      return `${x},${y}`;
-    }).join(' ');
+  const xOf = (i: number) => PL + (i / (data.length - 1)) * innerW;
+  // ✅ Clamp: never let y go below PT or above PT+innerH
+  const yOf = (v: number) => {
+    const ratio = Math.min(Math.max(v / maxVal, 0), 1);
+    return PT + (1 - ratio) * innerH;
   };
+
+  const pts = (key: 'strikes' | 'air') =>
+    data.map((d, i) => `${xOf(i).toFixed(1)},${yOf(d[key]).toFixed(1)}`).join(' ');
+
+  const yTicks = [0, 0.5, 1];
+  const last = data[data.length - 1];
 
   return (
     <div className="widget-card flex flex-col bg-gray-900/60 border border-white/10 rounded-lg overflow-hidden backdrop-blur-md">
-      <div className="p-3 border-b border-white/5 flex flex-col gap-2">
-        <div className="flex justify-between items-start">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">KSA Region Threat Correlation</span>
-            <span className="text-[9px] text-blue-400 font-mono">Air & Active Strikes (6h)</span>
-          </div>
-        </div>
-        <div className="flex gap-4 pt-1 border-t border-white/5">
+
+      {/* Header */}
+      <div className="p-3 border-b border-white/5">
+        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">
+          KSA Region Threat Correlation
+        </span>
+        <span className="text-[9px] text-blue-400 font-mono block mt-0.5">
+          Air & Active Strikes (6h)
+        </span>
+        <div className="flex gap-4 mt-2 pt-1.5 border-t border-white/5">
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
+            <div className="w-2 h-2 rounded-full bg-red-500" />
             <span className="text-[8px] text-gray-500 font-black tracking-wider uppercase">Active Strikes</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+            <div className="w-2 h-2 rounded-full bg-blue-500" />
             <span className="text-[8px] text-gray-500 font-black tracking-wider uppercase">Air Activity</span>
           </div>
         </div>
       </div>
 
-      <div className="p-3">
-        <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
-          {/* Grid lines and Y-axis labels */}
-          {[1, 0.75, 0.5, 0.25, 0].map((p) => {
-            const y = padding + (1 - p) * (height - padding * 2);
-            const val = Math.round(p * maxVal);
+      {/* Graph */}
+      <div className="px-2 pt-2 pb-1">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          width="100%"
+          height={H}
+          style={{ display: 'block', overflow: 'visible' }}
+        >
+          {/* Y grid + labels */}
+          {yTicks.map(p => {
+            const y = yOf(p * maxVal);
             return (
               <g key={p}>
-                <line 
-                  x1={padding} 
-                  y1={y} 
-                  x2={width - padding} 
-                  y2={y} 
-                  stroke="white" 
-                  strokeOpacity="0.05" 
-                  strokeDasharray="2,2" 
+                <line
+                  x1={PL} y1={y} x2={W - PR} y2={y}
+                  stroke="rgba(255,255,255,0.07)"
+                  strokeDasharray="2,3"
                 />
-                <text 
-                  x={padding - 5} 
-                  y={y + 3} 
-                  fontSize="7" 
-                  fill="#555" 
-                  textAnchor="end" 
-                  className="font-mono"
-                >
-                  {val}
+                <text x={PL - 3} y={y + 3} fontSize={6} fill="#555" textAnchor="end">
+                  {Math.round(p * maxVal)}
                 </text>
               </g>
             );
           })}
 
-          {/* Time Labels (X-axis) */}
-          {data.filter((_, i) => i % 3 === 0).map((d, i, arr) => {
-             const x = padding + (data.indexOf(d) / (data.length - 1)) * (width - padding * 2);
-             return (
-               <text 
-                key={i}
-                x={x} 
-                y={height - 2} 
-                fontSize="7" 
-                fill="#555" 
-                textAnchor="middle" 
-                className="font-mono font-bold"
-               >
-                 {d.time}
-               </text>
-             );
-          })}
+          {/* X labels every 3rd point */}
+          {data.map((d, i) => i % 3 === 0 && (
+            <text key={i} x={xOf(i)} y={H - 4} fontSize={6} fill="#555" textAnchor="middle">
+              {d.time}
+            </text>
+          ))}
 
-          {/* Lines */}
-          <polyline 
-            fill="none" 
-            stroke="#ef4444" 
-            strokeWidth="2" 
-            points={getPoints('strikes')} 
-            strokeLinejoin="round" 
+          {/* Strikes line — red */}
+          <polyline
+            fill="none"
+            stroke="#ef4444"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
             strokeLinecap="round"
-            className="drop-shadow-[0_0_8px_rgba(239,68,68,0.3)]"
-          />
-          <polyline 
-            fill="none" 
-            stroke="#3b82f6" 
-            strokeWidth="2" 
-            points={getPoints('air')} 
-            strokeLinejoin="round" 
-            strokeLinecap="round"
-            className="drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]"
+            points={pts('strikes')}
           />
 
-          {/* Dots at the end */}
-          {data.length > 0 && (
-            <>
-              <circle 
-                cx={padding + (data.length - 1) / (data.length - 1) * (width - padding * 2)} 
-                cy={height - padding - (data[data.length - 1].strikes / maxVal) * (height - padding * 2)} 
-                r="3" 
-                fill="#ef4444" 
-              />
-              <circle 
-                cx={padding + (data.length - 1) / (data.length - 1) * (width - padding * 2)} 
-                cy={height - padding - (data[data.length - 1].air / maxVal) * (height - padding * 2)} 
-                r="3" 
-                fill="#3b82f6" 
-              />
-            </>
-          )}
+          {/* Air line — blue */}
+          <polyline
+            fill="none"
+            stroke="#3b82f6"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            points={pts('air')}
+          />
+
+          {/* End dots */}
+          <circle cx={xOf(data.length - 1)} cy={yOf(last.strikes)} r={2.5} fill="#ef4444" />
+          <circle cx={xOf(data.length - 1)} cy={yOf(last.air)} r={2.5} fill="#3b82f6" />
         </svg>
       </div>
 
+      {/* Footer */}
       <div className="px-3 py-1.5 bg-white/5 border-t border-white/5 flex justify-between items-center">
         <span className="text-[8px] text-gray-500 font-bold uppercase">Source: Overwatch Intel</span>
         <div className="flex gap-2 text-[9px]">
-           <span className="text-red-400 font-bold">{data[data.length-1]?.strikes} strikes</span>
-           <span className="text-blue-400 font-bold">{data[data.length-1]?.air} air</span>
+          <span className="text-red-400 font-bold">{last?.strikes} strikes</span>
+          <span className="text-blue-400 font-bold">{last?.air} air</span>
         </div>
       </div>
+
     </div>
   );
 }
