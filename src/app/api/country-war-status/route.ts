@@ -6,8 +6,6 @@ export async function GET() {
 
   const data = await res.json()
 
-  console.log(data, "datadatadata");
-
   const text = data.articles.map((a: any) => a.title).join(" ").toLowerCase()
 
   const getStatus = (keywords: any) => {
