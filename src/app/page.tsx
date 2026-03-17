@@ -17,6 +17,7 @@ import StrategicRisk from "@/components/StrategicRisk";
 import CountryInstability from "@/components/CountryInstability";
 import EscalationProbability from "@/components/EscalationProbability";
 import PizzaIndexModal from "@/components/PizzaIndexModal";
+import StrikesMissilesGraph from "@/components/StrikesMissilesGraph";
 
 
 export default function Home() {
@@ -107,7 +108,8 @@ export default function Home() {
                <div className="grid grid-cols-3 gap-3">
                   <CountryInstability />
                   <KSANewsFeed />
-                  <div className="scale-90 origin-top">
+                  <div className="scale-90 origin-top flex flex-col gap-3">
+                     <StrikesMissilesGraph />
                      <StrategicPosture />
                   </div>
                </div>
@@ -159,7 +161,7 @@ export default function Home() {
                      <span className="text-gray-700 text-xs">THREAT CORRELATION MAP</span>
                   </div>
                </div>
-
+               
                <StrategicPosture />
 
                <div className="widget-card p-3 bg-red-950/20 border-red-900/50">
