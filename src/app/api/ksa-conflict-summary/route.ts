@@ -4,7 +4,7 @@ export async function GET() {
     try {
         // Fetch news related to conflicts near KSA
         const newsRes = await fetch(
-            `https://newsapi.org/v2/everything?q=Saudi Arabia`,
+            `https://newsapi.org/v2/everything?q=%2BSaudi%20%2BArabia&sortBy=publishedAt`,
             {
                 headers: {
                     Authorization: `Bearer ${process.env.NEWS_API_KEY}`
@@ -46,7 +46,7 @@ export async function GET() {
                     {
                         role: "system",
                         content:
-                            "You are a filter. From the headlines, choose ONLY those strictly affecting Saudi Arabia directly (domestic security, direct borders). Ignore general Middle East news. Then summarize the situation in 5-10 words with stoplight emoji (🔴🟡🟢). If nothing strictly relevant, say 'No immediate threats detected in KSA. 🟢'"
+                            "You are a strict filter. From the headlines, choose ONLY those where Saudi Arabia (KSA) is the MAIN SUBJECT of the news. Ignore general Middle East news, Iran/Israel news (unless it direct describes an impact ON Saudi soil/security), or foreign operations. Summarize the Saudi-specific situation in 5-10 words with stoplight emoji (🔴🟡🟢). If no strictly relevant news, respond: 'No immediate threats detected in KSA. 🟢'"
                     },
                     {
                         role: "user",

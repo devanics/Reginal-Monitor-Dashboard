@@ -20,7 +20,7 @@ export default function CryptoWidget() {
   if (loading) return <div className="p-3 bg-card rounded-lg border border-border animate-pulse h-48"></div>;
 
   return (
-    <div className="flex flex-col gap-2 bg-gray-900 h-60 overflow-scroll rounded-lg p-1">
+    <div className="flex flex-col gap-2 bg-gray-900 h-60 overflow-hidden rounded-lg p-1">
       <h2 className="text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase px-1">Crypto</h2>
       <div className="bg-card border border-border rounded-lg flex flex-col overflow-hidden">
         {data.map((item, index) => {
