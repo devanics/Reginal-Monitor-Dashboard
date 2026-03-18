@@ -48,6 +48,7 @@ export default function Home() {
          .catch(console.error);
    }, []);
 
+   console.log(pizzaData);
    return (
       <div className="dashboard-container">
          {/* Top Nav Row */}
