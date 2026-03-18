@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const openAIKey = process.env.OPENAI_API_KEY;
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  if (openAIKey) {
+  if (openRouterKey) {
     try {
       const prompt = `
         Provide the current hypothetical or real intelligence status for the Strait of Hormuz. 
@@ -15,14 +16,16 @@ export async function GET() {
         }
       `;
 
-      const aiResp = await fetch('https://api.openai.com/v1/chat/completions', {
+      const aiResp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${openAIKey}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${openRouterKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': baseUrl,
+          'X-Title': 'Regional Monitor Dashboard'
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
+          model: 'openai/gpt-4o-mini',
           messages: [{ role: 'user', content: prompt }],
           temperature: 0.3,
           response_format: { type: "json_object" }
@@ -41,7 +44,7 @@ export async function GET() {
         }
       }
     } catch (error) {
-      console.error('Hormuz OpenAI Fetch failed:', error);
+      console.error('Hormuz Open Router Fetch failed:', error);
     }
   }
 

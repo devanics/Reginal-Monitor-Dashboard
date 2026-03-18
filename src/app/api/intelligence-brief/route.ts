@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from 'next/server';
 // ========================================================================
 
 export async function GET() {
-  const openAIKey = process.env.OPENAI_API_KEY;
   const newsKey = process.env.NEWS_API_KEY;
 
   try {
@@ -60,9 +59,12 @@ export async function GET() {
       flights: 1
     };
 
-    // 3. Generate Brief using OpenAI
+    // 3. Generate Brief using Open Router
     let brief = "";
-    if (openAIKey) {
+    const openRouterKey = process.env.OPENROUTER_API_KEY;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+    if (openRouterKey) {
       const prompt = `
         Provide a concise intelligence brief for Saudi Arabia based on these headlines:
         ${newsHeadlines || "No major headlines today."}
@@ -73,14 +75,16 @@ export async function GET() {
         Maintain a professional, analytic tone. Keep it under 150 words.
       `;
 
-      const aiResp = await fetch('https://api.openai.com/v1/chat/completions', {
+      const aiResp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${openAIKey}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${openRouterKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': baseUrl,
+          'X-Title': 'Regional Monitor Dashboard'
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
+          model: 'openai/gpt-4o-mini',
           messages: [{ role: 'user', content: prompt }],
           temperature: 0.3
         })

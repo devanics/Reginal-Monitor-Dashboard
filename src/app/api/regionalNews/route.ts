@@ -22,15 +22,20 @@ export async function GET() {
       return NextResponse.json({ summary: "No recent conflict news found. 🟢" });
     }
 
-    // 2. generate AI summary using OpenAI
-    const ai = await fetch("https://api.openai.com/v1/chat/completions", {
+    // 2. generate AI summary using Open Router
+    const openRouterKey = process.env.OPENROUTER_API_KEY;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+    const ai = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${openRouterKey}`,
+        'HTTP-Referer': baseUrl,
+        'X-Title': 'Regional Monitor Dashboard'
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "openai/gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -45,7 +50,7 @@ export async function GET() {
     });
 
     if (!ai.ok) {
-      throw new Error(`OpenAI API responded with ${ai.status}`);
+      throw new Error(`Open Router API responded with ${ai.status}`);
     }
 
     const aiData = await ai.json();

@@ -21,14 +21,19 @@ export async function GET() {
     const articles = (newsData.articles || []).slice(0, 10).map((a: any) => a.title).join("\n");
 
     // 2. Use AI to assess the probability of regional escalation based on news
-    const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+    const openRouterKey = process.env.OPENROUTER_API_KEY;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+    const aiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${openRouterKey}`,
+        'HTTP-Referer': baseUrl,
+        'X-Title': 'Regional Monitor Dashboard'
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "openai/gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -43,7 +48,7 @@ export async function GET() {
     });
 
     if (!aiRes.ok) {
-      throw new Error(`OpenAI API responded with ${aiRes.status}`);
+      throw new Error(`Open Router API responded with ${aiRes.status}`);
     }
 
     const aiData = await aiRes.json();
