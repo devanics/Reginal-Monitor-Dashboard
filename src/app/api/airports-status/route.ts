@@ -1,58 +1,69 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
+
+
 export async function GET() {
-  const openRouterKey = process.env.OPENROUTER_API_KEY;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const now = Date.now();
 
-  if (openRouterKey) {
-    try {
-      const prompt = `
-        Provide the current hypothetical or real operational status for these 5 major Middle East airports: DXB (Dubai), DOH (Doha), TLV (Tel Aviv), AMM (Amman), and BEY (Beirut).
-        Return ONLY a raw JSON object with the following schema:
-        {
-          "airports": [
-            { "code": "string", "name": "string", "status": "OPERATIONAL" | "DELAYS" | "RESTRICTED" | "CLOSED" }
-          ]
-        }
-      `;
 
-      const aiResp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openRouterKey}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': baseUrl,
-          'X-Title': 'Regional Monitor Dashboard'
-        },
-        body: JSON.stringify({
-          model: 'openai/gpt-4o-mini',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.3,
-          response_format: { type: "json_object" }
-        })
-      });
+  const apiKey = process.env.AVIATIONSTACK_API_KEY;
 
-      if (aiResp.ok) {
-        const aiData = await aiResp.json();
-        const content = aiData.choices[0]?.message?.content;
-        if (content) {
-          const parsed = JSON.parse(content);
-          return NextResponse.json(parsed);
-        }
-      }
-    } catch (error) {
-      console.error('Airports Open Router Fetch failed:', error);
-    }
-  }
-
-  // Fallback to mock
   const airports = [
-    { code: 'DXB', name: 'Dubai', status: 'OPERATIONAL' },
-    { code: 'DOH', name: 'Doha', status: 'OPERATIONAL' },
-    { code: 'TLV', name: 'Tel Aviv', status: 'DELAYS' },
-    { code: 'AMM', name: 'Amman', status: 'OPERATIONAL' },
-    { code: 'BEY', name: 'Beirut', status: 'RESTRICTED' }
+    { code: 'DXB', icao: 'OMDB', name: 'Dubai International Airport' },
+{ code: 'DOH', icao: 'OTHH', name: 'Hamad International Airport' },
+{ code: 'TLV', icao: 'LLBG', name: 'Ben Gurion Airport' },
+{ code: 'AMM', icao: 'OJAI', name: 'Queen Alia International Airport' },
+{ code: 'BEY', icao: 'OLBA', name: 'Beirut Rafic Hariri International Airport' }
   ];
 
-  return NextResponse.json({ airports });
+  if (!apiKey) {
+    console.warn('[Regional Airports] AVIATIONSTACK_API_KEY missing');
+    return NextResponse.json({ airports: airports.map(a => ({ ...a, status: 'UNKNOWN', activity: 0 })) });
+  }
+
+  try {
+    const results = await Promise.all(airports.map(async (apt) => {
+      try {
+        // Fetching arrivals for the specific KSA airport
+        const resp = await fetch(`http://api.aviationstack.com/v1/flights?access_key=${apiKey}&arr_icao=${apt.icao}&limit=5`, {
+          next: { revalidate: 0 }
+        });
+
+        if (resp.ok) {
+          const data = await resp.json();
+          const flights = data.data || [];
+          console.log(`[Regional Airports] ${apt.code}: ${flights.length} active arrivals`);
+
+          let status = 'OPERATIONAL';
+          // Logic: High volume or active delays can trigger status changes
+          const delayed = flights.filter((f: any) => f.arrival?.delay && f.arrival.delay > 15).length;
+
+          if (delayed > 2) status = 'DELAYS';
+          else if (flights.length === 0) status = 'LOW_TRAFFIC';
+
+          return { ...apt, status, activity: flights.length };
+        } else {
+          const errorText = await resp.text();
+          console.error(`[Regional Airports] ${apt.code} fetch failed: ${resp.status} ${errorText}`);
+        }
+      } catch (e) {
+        console.error(`Error fetching ${apt.code}:`, e);
+      }
+
+      return { ...apt, status: 'OPERATIONAL', activity: 0 };
+    }));
+
+
+    return NextResponse.json({ airports: results });
+
+  } catch (error) {
+    console.error('Regional Airports Critical Failure:', error);
+    return NextResponse.json({
+      airports: airports.map(a => ({ ...a, status: 'UNKNOWN', activity: 0 })),
+      error: 'Critical failure'
+    });
+  }
 }
+

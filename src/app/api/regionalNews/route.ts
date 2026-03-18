@@ -3,9 +3,9 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // 1. fetch latest news
+    // 1. fetch latest news for KSA only
     const news = await fetch(
-      `https://newsdata.io/api/1/latest?apikey=${process.env.NEWSDATA_API_KEY}&country=ir,sa,il&q=war+OR+conflict+OR+clashes+OR+attack+OR+battle+OR+violence+OR+strike+OR+hezbollah+OR+hamas+OR+yemen`,
+      `https://newsdata.io/api/1/latest?apikey=${process.env.NEWSDATA_API_KEY}&country=sa&q=saudi+OR+riyadh+OR+jeddah+OR+conflict+OR+unrest+OR+clashes`,
       {
         next: { revalidate: 900 } // refresh every 15 minutes
       }
