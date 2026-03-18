@@ -24,6 +24,9 @@ import RegionalStrikesGraph from "@/components/RegionalStrikesGraph";
 import HormuzStatusWidget from "@/components/HormuzStatusWidget";
 import RegionalAirportsWidget from "@/components/RegionalAirportsWidget";
 import RegionalCountryInstability from "@/components/RegionalCountryInstability";
+import KSAMajorAirports from "@/components/KSAMajorAirports";
+import InfraMonitor from "@/components/InfraMonitor";
+import CyberThreats from "@/components/CyberThreats";
 
 
 export default function Home() {
@@ -113,11 +116,21 @@ export default function Home() {
                <div className="grid grid-cols-2 gap-3">
                   <div>
                      <CountryInstability />
+                     <div className="mt-3">
+                        <CyberThreats />
+                     </div>
                   </div>
                   <div>
                      <StrikesMissilesGraph />
                      <KSANewsFeed />
                      <StrategicPosture />
+                     <div className="mt-3">
+                        <InfraMonitor />
+                     </div>
+                     <div className="mt-3">
+                        <KSAMajorAirports />
+                        
+                     </div>
                   </div>
                </div>
             </div>
