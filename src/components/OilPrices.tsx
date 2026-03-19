@@ -32,6 +32,7 @@ export default function OilPrices() {
 
     return (
         <div className="flex flex-col gap-2 bg-gray-900 h-60 overflow-scroll rounded-lg p-1">
+             <h2 className="text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase px-1">Oil Prices</h2>
             <div className="grid grid-cols-1 gap-2">
                 {grades.map((grade) => {
                     const isPositive = grade.change >= 0;
@@ -45,7 +46,7 @@ export default function OilPrices() {
                         >
                             <div className="flex justify-between items-start mb-1">
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-[10px] font-bold text-gray-400">{grade.code}</span>
+                                    <span className="text-[10px] font-bold text-gray-400">{grade.name}</span>
                                     <span className="text-[8px] text-gray-600 leading-none">
                                         {grade.gravity}° API
                                     </span>
