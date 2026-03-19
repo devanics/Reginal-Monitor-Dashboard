@@ -8,7 +8,7 @@ export default function StocksWidget() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/stocks')
+    fetch('/api/markets')
       .then((res) => res.json())
       .then((json) => {
         if (json.quotes) setData(json.quotes);
@@ -31,7 +31,7 @@ export default function StocksWidget() {
           return (
             <div key={item.symbol} className="bg-card border border-border rounded-lg p-2.5 flex flex-col justify-between hover:bg-card-hover transition-colors">
               <div className="flex justify-between items-start mb-1">
-                <span className="text-[10px] font-bold text-gray-400">{item.symbol}</span>
+                <span className="text-[10px] font-bold text-gray-400">{item.name || item.symbol}</span>
                 <div className="w-12 h-5">
                    <Sparkline data={item.sparkline} color={strokeColor} />
                 </div>

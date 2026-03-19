@@ -118,7 +118,7 @@ export default function StrikesMissilesGraph() {
                   stroke="rgba(255,255,255,0.07)"
                   strokeDasharray="2,3"
                 />
-                <text x={PL - 3} y={y + 3} fontSize={6} fill="#555" textAnchor="end">
+                <text x={PL - 3} y={y + 3} fontSize={11} fill="#888" textAnchor="end">
                   {Math.round(p * maxVal)}
                 </text>
               </g>
@@ -127,7 +127,7 @@ export default function StrikesMissilesGraph() {
 
           {/* X labels every 3rd point */}
           {data.map((d, i) => i % 3 === 0 && (
-            <text key={i} x={xOf(i)} y={H - 4} fontSize={6} fill="#555" textAnchor="middle">
+            <text key={i} x={xOf(i)} y={H - 4} fontSize={11} fill="#888" textAnchor="middle">
               {d.time}
             </text>
           ))}

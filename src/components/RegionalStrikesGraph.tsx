@@ -102,7 +102,7 @@ export default function RegionalStrikesGraph() {
               <g key={p}>
                 <line x1={padding} y1={y} x2={width - padding} y2={y}
                   stroke="white" strokeOpacity="0.05" strokeDasharray="2,2" />
-                <text x={padding - 5} y={y + 3} fontSize="7" fill="#555" textAnchor="end" fontFamily="monospace">
+                <text x={padding - 5} y={y + 3} fontSize="11" fill="#888" textAnchor="end" fontFamily="monospace">
                   {val}
                 </text>
               </g>
@@ -116,7 +116,7 @@ export default function RegionalStrikesGraph() {
               const originalIdx = data.indexOf(d);
               const x = padding + (originalIdx / (data.length - 1)) * (width - padding * 2);
               return (
-                <text key={i} x={x} y={height - 2} fontSize="7" fill="#555" textAnchor="middle" fontFamily="monospace">
+                <text key={i} x={x} y={height - 2} fontSize="11" fill="#888" textAnchor="middle" fontFamily="monospace">
                   {d.time}
                 </text>
               );
