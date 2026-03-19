@@ -4,16 +4,21 @@ import { NextRequest, NextResponse } from 'next/server';
 // Intelligence Brief API Route (Dynamic CII Scoring)
 // ========================================================================
 
-export async function GET() {
-  const newsKey = process.env.NEWS_API_KEY;
+const countryMap: Record<string, string> = {
+  'SA': 'Saudi Arabia', 'AE': 'UAE', 'BH': 'Bahrain', 'OM': 'Oman',
+  'QA': 'Qatar', 'IR': 'Iran', 'IL': 'Israel', 'KW': 'Kuwait', 'TR': 'Turkey'
+};
+const baselineMap: Record<string, number> = { 
+  SA: 2.0, IR: 4.5, IL: 4.0, TR: 3.0, AE: 1.0, BH: 1.5, OM: 0.8, QA: 1.2, KW: 1.5 
+};
 
-  try {
-    // 1. Fetch News for KSA to inform the brief and scores
-    let newsHeadlines = "";
-    let newsCount = 0;
-    
-    if (newsKey) {
-      const newsResp = await fetch(`https://newsapi.org/v2/everything?q=Saudi Arabia OR Riyadh&pageSize=10`, {
+async function getCountryStats(code: string, name: string, newsKey?: string) {
+  let newsHeadlines = "";
+  let newsCount = 0;
+  
+  if (newsKey) {
+    try {
+      const newsResp = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(name)}&pageSize=5`, {
         headers: { 'Authorization': `Bearer ${newsKey}` },
         next: { revalidate: 3600 }
       });
@@ -22,56 +27,70 @@ export async function GET() {
         newsCount = data.totalResults || 0;
         newsHeadlines = (data.articles || []).map((a: any) => a.title).join("\n");
       }
+    } catch (e) {
+      console.error(`News fetch error for ${code}:`, e);
+    }
+  }
+
+  const multiplier = baselineMap[code.toUpperCase()] || 2.0;
+  const lHeadlines = newsHeadlines.toLowerCase();
+  
+  const baseUnrest = lHeadlines.includes('protest') ? 8 : (lHeadlines.includes('strike') ? 4 : 2);
+  const unrestScore = Math.min(100, Math.round(baseUnrest * 4 * multiplier));
+  
+  const hasConflict = lHeadlines.includes('attack') || lHeadlines.includes('clash') || lHeadlines.includes('war') || lHeadlines.includes('missile');
+  const conflictScore = hasConflict ? Math.min(100, Math.round(20 * multiplier)) : 0;
+  
+  const securityScore = Math.min(100, Math.round(15 * multiplier));
+  const infoScore = Math.min(100, Math.round(Math.min(50, (newsCount / 10))));
+
+  const index = Math.round(unrestScore * 0.25 + conflictScore * 0.30 + securityScore * 0.20 + infoScore * 0.25);
+  const status = index >= 70 ? 'critical' : (index >= 40 ? 'elevated' : 'stable');
+
+  return {
+    code: code.toLowerCase(),
+    name,
+    unrest: unrestScore,
+    conflict: conflictScore,
+    security: securityScore,
+    information: infoScore,
+    score: index, // for the list view
+    index: index, // for the detailed view
+    status: status,
+    protests: lHeadlines.match(/protest/g)?.length || 0,
+    strikes: lHeadlines.match(/strike/g)?.length || 0,
+    newsHeadlines
+  };
+}
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const countryCode = searchParams.get('country') || 'SA';
+  const isList = searchParams.get('list') === 'true';
+  const newsKey = process.env.NEWS_API_KEY;
+
+  try {
+    if (isList) {
+       const allStats = await Promise.all(
+         Object.entries(countryMap).map(([code, name]) => getCountryStats(code, name, newsKey))
+       );
+       return NextResponse.json({ countries: allStats });
     }
 
-    // 2. Dynamic CII Scoring (Ported from Open Source Core)
-    // We simulate the signals based on news volume/content for a realistic feel
-    const multiplier = 2.0; // SA Multiplier from source
-    
-    // Unrest Simulation (Protests/Strikes detected in news or baseline)
-    const baseUnrest = newsHeadlines.toLowerCase().includes('protest') ? 8 : (newsHeadlines.toLowerCase().includes('strike') ? 4 : 2);
-    const unrestScore = Math.min(100, Math.round(baseUnrest * 4 * multiplier)); // target 32 in screenshot
-    
-    // Conflict Simulation
-    const hasConflict = newsHeadlines.toLowerCase().includes('attack') || newsHeadlines.toLowerCase().includes('clash');
-    const conflictScore = hasConflict ? 15 : 0; // target 0 in screenshot
-    
-    // Security Simulation (Military activity/GPS)
-    const securityScore = Math.min(100, Math.round(20 * multiplier + (Math.random() * 5))); // target 41 in screenshot
-    
-    // Information Simulation (News Signal Density)
-    const infoScore = Math.min(100, Math.round(Math.min(50, (newsCount / 5)))); // target 50 in screenshot
+    const countryName = countryMap[countryCode.toUpperCase()] || 'Saudi Arabia';
+    const stats = await getCountryStats(countryCode, countryName, newsKey);
 
-    // Overall Index (Weighted blend from source)
-    const index = Math.round(unrestScore * 0.25 + conflictScore * 0.30 + securityScore * 0.20 + infoScore * 0.25);
-    const status = index >= 70 ? 'critical' : (index >= 40 ? 'stable' : 'improving');
-
-    const stats = {
-      unrest: unrestScore,
-      conflict: conflictScore,
-      security: securityScore,
-      information: infoScore,
-      index: index,
-      status: status,
-      protests: newsHeadlines.toLowerCase().match(/protest/g)?.length || 8,
-      strikes: newsHeadlines.toLowerCase().match(/strike/g)?.length || 14,
-      ships: 3,
-      flights: 1
-    };
-
-    // 3. Generate Brief using Open Router
     let brief = "";
     const openRouterKey = process.env.OPENROUTER_API_KEY;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     if (openRouterKey) {
       const prompt = `
-        Provide a concise intelligence brief for Saudi Arabia based on these headlines:
-        ${newsHeadlines || "No major headlines today."}
+        Provide a concise intelligence brief for ${countryName} based on these headlines:
+        ${stats.newsHeadlines || "No major headlines today."}
         
-        The current instability metrics are: Unrest ${unrestScore}, Conflict ${conflictScore}, Security ${securityScore}.
-        Include specific references to the ${stats.protests} protest events and ${stats.strikes} active strikes if relevant. 
-        Mention that ${stats.ships} military vessels and ${stats.flights} military flight are active.
+        The current instability metrics are: Unrest ${stats.unrest}, Conflict ${stats.conflict}, Security ${stats.security}.
+        Include specific references to detected protest events and active strikes if relevant. 
         Maintain a professional, analytic tone. Keep it under 150 words.
       `;
 
@@ -97,7 +116,7 @@ export async function GET() {
     }
 
     if (!brief) {
-      brief = `## Intelligence Brief: Saudi Arabia (SA) — ${new Date().toISOString().split('T')[0]}\n\n1. Current Situation: Saudi Arabia is currently experiencing a period of relative stability, with a Country Instability Index (CII) of ${index}/100, holding steady. While no critical news or active conflicts are reported, localized unrest is evident, indicated by ${stats.protests} protest events and ${stats.strikes} active strikes. These domestic disturbances contribute to a moderate unrest score (${unrestScore}), suggesting underlying social or economic grievances. Efforts to address these issues are ongoing, with state-controlled media highlighting progress in development initiatives. Global monitor sensors indicate moderate GPS jamming across 60 hexes, and three military vessels are active in Saudi waters, alongside one military flight. The overall security posture remains vigilant but defensive.`;
+      brief = `## Intelligence Brief: ${countryName} — ${new Date().toISOString().split('T')[0]}\n\n${countryName} is currently showing a Country Instability Index of ${stats.index}/100. ${stats.status === 'stable' ? 'The situation remains largely stable with localized monitoring in effect.' : 'Heightened vigilance is recommended due to increasing signals of unrest or regional tension.'} Dynamic monitoring of news and maritime datasets indicates ${stats.information > 0 ? 'active' : 'minimal'} reporting on security developments.`;
     }
 
     return NextResponse.json({ brief, stats });

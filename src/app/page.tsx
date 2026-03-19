@@ -13,6 +13,7 @@ import KSANewsSummary from "@/components/KSANewsSummary";
 import KSAMap from "@/components/KSAMap";
 import KSANewsFeed from "@/components/KSANewsFeed";
 import StrategicPosture from "@/components/StrategicPosture";
+import StrategicPostureKSA from "@/components/StrategicPostureKSA";
 import StrategicRisk from "@/components/StrategicRisk";
 import CountryInstability from "@/components/CountryInstability";
 import EscalationProbability from "@/components/EscalationProbability";
@@ -22,7 +23,7 @@ import OilPrices from "@/components/OilPrices";
 import RegionalLatestFeed from "@/components/RegionalLatestFeed";
 import RegionalStrikesGraph from "@/components/RegionalStrikesGraph";
 import HormuzStatusWidget from "@/components/HormuzStatusWidget";
-import RegionalAirportsWidget from "@/components/RegionalAirportsWidget";
+import AirlineIntelligenceWidget from "@/components/AirlineIntelligenceWidget";
 import RegionalCountryInstability from "@/components/RegionalCountryInstability";
 import KSAMajorAirports from "@/components/KSAMajorAirports";
 import InfraMonitor from "@/components/InfraMonitor";
@@ -117,18 +118,19 @@ export default function Home() {
                   <div>
                      <CountryInstability />
                      <div className="mt-3">
-                        <CyberThreats />
+                         <KSAMajorAirports />
                      </div>
                   </div>
                   <div>
                      <StrikesMissilesGraph />
                      <KSANewsFeed />
-                     <StrategicPosture />
+                     <StrategicPostureKSA />
                      <div className="mt-3">
                         <InfraMonitor />
                      </div>
                      <div className="mt-3">
-                        <KSAMajorAirports />
+                        <CyberThreats />
+                       
                         
                      </div>
                   </div>
@@ -170,7 +172,7 @@ export default function Home() {
                   {/* Right: Country Instability → Strait of Hormuz → Airports */}
                   <div className="flex flex-col gap-3">
                      <HormuzStatusWidget />
-                     <RegionalAirportsWidget />
+                     <AirlineIntelligenceWidget />
                   </div>
                </div>
 
