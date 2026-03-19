@@ -27,7 +27,6 @@ export async function GET() {
         author: p.author_name,
         indicators: p.indicator_count
       }));
-      console.log("Pulses",pulses)
 
       return NextResponse.json({
         threatLevel: pulses.length > 0 ? 'MODERATE' : 'LOW',
