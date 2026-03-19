@@ -39,7 +39,7 @@ export default function RegionalLatestFeed() {
   if (loading) return <div className="widget-card animate-pulse h-48 bg-white/5" />;
 
   return (
-    <div className="widget-card border-l-0 border-r-0 rounded-none bg-transparent flex flex-col h-full">
+    <div className="widget-card border-l-0 border-r-0 rounded-none bg-transparent flex flex-col h-60">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-1 bg-white/5 border-b border-white/5">
         <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Latest Regional Feed</span>
