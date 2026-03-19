@@ -51,7 +51,7 @@ export default function RegionalCountryInstability() {
     if (loading) return <div className="widget-card animate-pulse h-[600px] bg-white/5"></div>;
 
     return (
-        <div className="widget-card flex flex-col h-full bg-black/40 border-l-0 border-r-0 rounded-none max-h-[800px]">
+        <div className="widget-card flex flex-col bg-black/40 border-l-0 border-r-0 rounded-none h-60">
             <div className="widget-header border-b border-white/5 pb-2 sticky top-0 bg-[#0a0a0a] z-10 px-4 pt-3">
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2">
@@ -215,10 +215,10 @@ function DetailedView({ country, onBack }: { country: any, onBack: () => void })
                     <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">7-Day Timeline</div>
                     <div className="relative h-32 w-full border-l border-white/10 ml-12">
                         {[
-                          { name: 'Protest', score: stats.unrest, color: 'text-orange-400' },
-                          { name: 'Conflict', score: stats.conflict, color: 'text-red-400' },
-                          { name: 'Security', score: stats.security, color: 'text-blue-400' },
-                          { name: 'Information', score: stats.information, color: 'text-orange-400' }
+                            { name: 'Protest', score: stats.unrest, color: 'text-orange-400' },
+                            { name: 'Conflict', score: stats.conflict, color: 'text-red-400' },
+                            { name: 'Security', score: stats.security, color: 'text-blue-400' },
+                            { name: 'Information', score: stats.information, color: 'text-orange-400' }
                         ].map((type, idx) => (
                             <div key={type.name} className="flex items-center h-8 relative">
                                 <span className={`absolute -left-14 text-[10px] font-bold ${type.color}`}>
