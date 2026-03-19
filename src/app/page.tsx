@@ -33,14 +33,14 @@ import CyberThreats from "@/components/CyberThreats";
 export default function Home() {
    const [isPizzaModalOpen, setIsPizzaModalOpen] = useState(false);
    const [pizzaData, setPizzaData] = useState<any>(null);
-   const [currentTime, setCurrentTime] = useState(new Date());
+   // const [currentTime, setCurrentTime] = useState(new Date());
 
-   useEffect(() => {
-      const timer = setInterval(() => {
-         setCurrentTime(new Date());
-      }, 1000);
-      return () => clearInterval(timer);
-   }, []);
+   // useEffect(() => {
+   //    const timer = setInterval(() => {
+   //       setCurrentTime(new Date());
+   //    }, 1000);
+   //    return () => clearInterval(timer);
+   // }, []);
 
    useEffect(() => {
       fetch('/api/pizza-index')
@@ -71,7 +71,7 @@ export default function Home() {
             </div>
             <EscalationProbability />
             <div className="flex items-center justify-end px-4 border-l border-white/10">
-               {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+               {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
             </div>
             <div className="flex items-center gap-2 px-4 border-l border-white/10">
                <span className="text-gray-500">APIs:</span>
@@ -119,7 +119,7 @@ export default function Home() {
                   <div>
                      <CountryInstability />
                      <div className="mt-3">
-                         <KSAMajorAirports />
+                        <KSAMajorAirports />
                      </div>
                   </div>
                   <div>
@@ -131,8 +131,8 @@ export default function Home() {
                      </div>
                      <div className="mt-3">
                         <CyberThreats />
-                       
-                        
+
+
                      </div>
                   </div>
                </div>
