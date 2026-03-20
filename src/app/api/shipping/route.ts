@@ -1,5 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// ========================================================================
+// Maritime Shipping API Route (Strategic Waterways & Ports)
+// ========================================================================
+
+const STRATEGIC_WATERWAYS = [
+  { id: 'taiwan_strait', name: 'TAIWAN STRAIT', lat: 24.0, lon: 119.5, description: 'Critical shipping lane, PLA activity' },
+  { id: 'malacca_strait', name: 'MALACCA STRAIT', lat: 2.5, lon: 101.5, description: 'Major oil shipping route' },
+  { id: 'hormuz_strait', name: 'STRAIT OF HORMUZ', lat: 26.5, lon: 56.5, description: 'Oil chokepoint, Iran control', status: 'Elevated Monitoring' },
+  { id: 'bosphorus', name: 'BOSPHORUS STRAIT', lat: 41.1, lon: 29.0, description: 'Black Sea access, Turkey control' },
+  { id: 'suez', name: 'SUEZ CANAL', lat: 30.5, lon: 32.3, description: 'Europe-Asia shipping', status: 'Restricted Throughput' },
+  { id: 'panama', name: 'PANAMA CANAL', lat: 9.1, lon: -79.7, description: 'Americas shipping route' },
+  { id: 'gibraltar', name: 'STRAIT OF GIBRALTAR', lat: 35.9, lon: -5.6, description: 'Mediterranean access, NATO control' },
+  { id: 'bab_el_mandeb', name: 'BAB EL-MANDEB', lat: 12.5, lon: 43.3, description: 'Red Sea chokepoint, Houthi attacks', status: 'High Risk' },
+];
+
+const MAJOR_PORTS = [
+  { name: 'Shanghai Port', lat: 31.2222, lon: 121.4581, country: 'CN' },
+  { name: 'Singapore Port', lat: 1.2902, lon: 103.8519, country: 'SG' },
+  { name: 'Jebel Ali Port', lat: 25.0112, lon: 55.0617, country: 'AE' },
+  { name: 'Rotterdam Port', lat: 51.9225, lon: 4.4792, country: 'NL' },
+  { name: 'Busan Port', lat: 35.1796, lon: 129.0756, country: 'KR' },
+  { name: 'Jeddah Islamic Port', lat: 21.4858, lon: 39.1925, country: 'SA' },
+];
+
 const FRED_API_BASE = 'https://api.stlouisfed.org/fred';
 const SHIPPING_SERIES = [
   { seriesId: 'PCU483111483111', name: 'Deep Sea Freight Producer Price Index', unit: 'index' },
@@ -12,33 +36,25 @@ export async function GET(request: NextRequest) {
   const apiKey = process.env.FRED_API_KEY;
 
   if (format === 'geojson') {
-    const vessels = [
-      { name: 'Maersk Hangzhou', lat: 12.5, lon: 43.5, type: 'Container' },
-      { name: 'MV Cheshire', lat: 14.2, lon: 42.1, type: 'Bulk Carrier' },
-      { name: 'Stoll Neptune', lat: 25.4, lon: 54.2, type: 'Tanker' },
-      { name: 'Hyundai Pride', lat: 26.8, lon: 51.5, type: 'Container' },
-      { name: 'Cosco Shipping Rose', lat: 20.5, lon: 39.2, type: 'Container' }
+    const features = [
+      ...STRATEGIC_WATERWAYS.map(w => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [w.lon, w.lat] },
+        properties: { name: w.name, type: 'CHOKEPOINT', status: w.status || 'Normal', description: w.description }
+      })),
+      ...MAJOR_PORTS.map(p => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
+        properties: { name: p.name, type: 'PORT', status: 'Operational', country: p.country }
+      }))
     ];
 
-    return NextResponse.json({
-      type: 'FeatureCollection',
-      features: vessels.map(v => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [v.lon, v.lat]
-        },
-        properties: {
-          name: v.name,
-          type: v.type,
-          status: 'In Transit'
-        }
-      }))
-    });
+    return NextResponse.json({ type: 'FeatureCollection', features });
   }
 
+  // Handle FRED data if no format specified
   if (!apiKey) {
-    return NextResponse.json({ error: 'FRED_API_KEY not configured' }, { status: 500 });
+    return NextResponse.json({ indices: [] }); // Silently return empty instead of error to not break UI
   }
 
   try {
@@ -89,6 +105,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ indices: results.filter(Boolean) });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Failed to fetch shipping rates' }, { status: 500 });
+    return NextResponse.json({ indices: [] });
   }
 }

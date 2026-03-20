@@ -1,21 +1,87 @@
 import { NextResponse } from 'next/server';
 
 // ========================================================================
-// Intel Hotspots API Route (Scatterplot Data)
+// Intel Hotspots API Route (Global Intelligence Hotspots)
 // ========================================================================
 
-const HOTSPOTS = [
-  { name: 'Riyadh Diplomatic Quarter Alert', lat: 24.6750, lon: 46.6231, intensity: 0.8 },
-  { name: 'Jeddah Port Security Anomaly', lat: 21.4858, lon: 39.1925, intensity: 0.6 },
-  { name: 'Dammam Energy Corridor Analysis', lat: 26.4207, lon: 50.0888, intensity: 0.4 },
-  { name: 'Neom Construction Perimeter', lat: 28.3300, lon: 34.8300, intensity: 0.3 },
-  { name: 'Abha Regional Security Monitoring', lat: 18.2167, lon: 42.5000, intensity: 0.7 },
-  { name: 'Jazan Frontier Observation', lat: 16.8892, lon: 42.5511, intensity: 0.9 }
+const INTEL_HOTSPOTS = [
+  {
+    id: 'sahel',
+    name: 'Sahel Region',
+    lat: 14.0,
+    lon: -1.0,
+    intensity: 0.9,
+    description: 'Instability, military coups, and Islamist insurgency.',
+    status: 'High Tension'
+  },
+  {
+    id: 'horn_africa',
+    name: 'Horn of Africa',
+    lat: 10.0,
+    lon: 49.0,
+    intensity: 0.85,
+    description: 'Resurgent piracy and Red Sea shipping threats.',
+    status: 'Critical'
+  },
+  {
+    id: 'tehran',
+    name: 'Tehran Hub',
+    lat: 35.7,
+    lon: 51.4,
+    intensity: 0.8,
+    description: 'Strategic command and regional proxy coordination.',
+    status: 'Monitoring'
+  },
+  {
+    id: 'riyadh',
+    name: 'Riyadh Strategic',
+    lat: 24.7136,
+    lon: 46.6753,
+    intensity: 0.5,
+    description: 'Regional economic and political power center.',
+    status: 'Stable'
+  },
+  {
+    id: 'pak_afghan',
+    name: 'Pak-Afghan Border',
+    lat: 31.8,
+    lon: 69.0,
+    intensity: 0.75,
+    description: 'Cross-border militancy and security operations.',
+    status: 'Active'
+  },
+  {
+    id: 'kyiv',
+    name: 'Kyiv Theater',
+    lat: 50.45,
+    lon: 30.5,
+    intensity: 0.95,
+    description: 'High-intensity conventional conflict zone.',
+    status: 'War Zone'
+  },
+  {
+    id: 'taipei',
+    name: 'Taiwan Strait',
+    lat: 25.0322,
+    lon: 121.5654,
+    intensity: 0.7,
+    description: 'Strategic chokepoint and geopolitical flashpoint.',
+    status: 'Watchlist'
+  },
+  {
+    id: 'sanaa',
+    name: "Sana'a Control",
+    lat: 15.3694,
+    lon: 44.1910,
+    intensity: 0.8,
+    description: 'Houthi operations and maritime disruption center.',
+    status: 'Active'
+  }
 ];
 
 export async function GET() {
   try {
-    return NextResponse.json(HOTSPOTS);
+    return NextResponse.json(INTEL_HOTSPOTS);
   } catch (error) {
     console.error('Hotspots API Error:', error);
     return NextResponse.json([], { status: 500 });
