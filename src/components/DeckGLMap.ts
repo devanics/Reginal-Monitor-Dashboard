@@ -21,10 +21,10 @@ export class DeckGLMap {
 
     // Initial layers state - all off by default except military
     this.layers = {
-      military: false,
-      conflicts: false,
-      bases: false,
-      iranAttacks: false,
+      conflicts: true,
+      bases: true,
+      networkOutage: true,
+      gpsOutage: true
       // ... rest false
     } as any;
 

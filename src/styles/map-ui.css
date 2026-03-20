@@ -95,14 +95,14 @@
 /* deck.gl Layer Toggles */
 .deckgl-layer-toggles {
   position: absolute;
-  bottom: 0px;
-  right: 0px;
+  top: 0px;
+  left: 0px;
   z-index: 100;
   background: rgba(0,0,0,0.8);
   backdrop-filter: blur(8px);
-  border-left: 1px solid var(--border);
-  border-top: 1px solid var(--border);
-  width: 260px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  width: 200px;
   max-height: 100%;
   display: flex;
   flex-direction: column;
