@@ -12,6 +12,7 @@ import RegionalSummaryRegion from "@/components/RegionalSummaryRegion";
 import KSANewsSummary from "@/components/KSANewsSummary";
 import KSAMap from "@/components/KSAMap";
 import KSANewsFeed from "@/components/KSANewsFeed";
+import MapWrapper from "@/components/MapWrapper";
 import StrategicPosture from "@/components/StrategicPosture";
 import StrategicPostureKSA from "@/components/StrategicPostureKSA";
 import StrategicRisk from "@/components/StrategicRisk";
@@ -139,7 +140,7 @@ export default function Home() {
 
             {/* Middle Column: Live Feeds */}
             <div className="column">
-               <KSAMap />
+               <MapWrapper />
                <div className="bg-black flex gap-2">
                   <LiveStreamPlayer mode="news" />
                   <LiveStreamPlayer mode="webcams" />

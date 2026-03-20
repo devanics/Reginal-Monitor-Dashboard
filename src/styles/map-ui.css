@@ -1,0 +1,195 @@
+/* Map UI Styles */
+:root {
+  /* Map-specific colors mapped to dashboard theme */
+  --green: #44ff88;
+  --yellow: #ffaa00;
+  --red: #ff4444;
+  --accent: #fff;
+  --bg: #0a0a0a;
+  --border: #2a2a2a;
+  --text: #e8e8e8;
+  --text-dim: #888;
+}
+
+/* ===== deck.gl Map Styles ===== */
+.map-container.deckgl-mode {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.deckgl-map-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
+
+#deckgl-basemap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+#deckgl-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: transparent !important;
+}
+
+#deckgl-overlay canvas {
+  pointer-events: auto;
+  background: transparent !important;
+}
+
+/* deck.gl Controls */
+.deckgl-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 500;
+  pointer-events: auto;
+}
+
+.deckgl-controls .zoom-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.deckgl-controls .map-btn {
+  width: 32px;
+  height: 32px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.deckgl-controls .map-btn:hover {
+  background: var(--bg);
+  border-color: var(--green);
+}
+
+/* deck.gl Layer Toggles */
+.deckgl-layer-toggles {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  z-index: 100;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(8px);
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  width: 260px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.deckgl-layer-toggles .toggle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.deckgl-layer-toggles .toggle-list {
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.deckgl-layer-toggles .layer-search {
+  width: calc(100% - 16px);
+  margin: 8px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 11px;
+  outline: none;
+}
+
+.deckgl-layer-toggles .layer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.15s ease;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.deckgl-layer-toggles .layer-toggle:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.deckgl-layer-toggles .layer-toggle input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.deckgl-layer-toggles .toggle-label {
+  flex: 1;
+}
+
+/* deck.gl Tooltip */
+.deckgl-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(4px);
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text);
+  max-width: 250px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.deckgl-tooltip strong {
+  color: var(--green);
+  display: block;
+  margin-bottom: 4px;
+}

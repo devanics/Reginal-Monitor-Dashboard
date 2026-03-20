@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const FRED_API_BASE = 'https://api.stlouisfed.org/fred';
 const SHIPPING_SERIES = [
@@ -6,8 +6,37 @@ const SHIPPING_SERIES = [
   { seriesId: 'TSIFRGHT', name: 'Freight Transportation Services Index', unit: 'index' },
 ];
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const format = searchParams.get('format');
   const apiKey = process.env.FRED_API_KEY;
+
+  if (format === 'geojson') {
+    const vessels = [
+      { name: 'Maersk Hangzhou', lat: 12.5, lon: 43.5, type: 'Container' },
+      { name: 'MV Cheshire', lat: 14.2, lon: 42.1, type: 'Bulk Carrier' },
+      { name: 'Stoll Neptune', lat: 25.4, lon: 54.2, type: 'Tanker' },
+      { name: 'Hyundai Pride', lat: 26.8, lon: 51.5, type: 'Container' },
+      { name: 'Cosco Shipping Rose', lat: 20.5, lon: 39.2, type: 'Container' }
+    ];
+
+    return NextResponse.json({
+      type: 'FeatureCollection',
+      features: vessels.map(v => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [v.lon, v.lat]
+        },
+        properties: {
+          name: v.name,
+          type: v.type,
+          status: 'In Transit'
+        }
+      }))
+    });
+  }
+
   if (!apiKey) {
     return NextResponse.json({ error: 'FRED_API_KEY not configured' }, { status: 500 });
   }
@@ -25,7 +54,7 @@ export async function GET() {
         });
 
         const response = await fetch(`${FRED_API_BASE}/series/observations?${params}`, {
-          next: { revalidate: 3600 } // Cache for 1 hour
+          next: { revalidate: 3600 }
         });
 
         if (!response.ok) return null;
