@@ -218,4 +218,14 @@ export class DeckGLMap {
   public setView(view: any) {
     this.map.flyTo(view);
   }
+
+  public destroy() {
+    if (this.overlay) {
+      this.map.removeControl(this.overlay as any);
+    }
+    if (this.map) {
+      this.map.remove();
+    }
+    this.container.innerHTML = '';
+  }
 }

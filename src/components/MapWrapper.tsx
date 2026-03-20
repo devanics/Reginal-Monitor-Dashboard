@@ -26,8 +26,7 @@ export default function MapWrapper() {
     mapInstanceRef.current = map;
 
     return () => {
-      // Clean up map instance if necessary
-      // map.destroy();
+      map.destroy();
     };
   }, []);
 
