@@ -60,6 +60,9 @@ export const LAYER_REGISTRY: Record<keyof MapLayers, LayerDefinition> = {
   processingPlants:         def('processingPlants',         '&#127981;', 'processingPlants',         'Processing Plants'),
   commodityPorts:           def('commodityPorts',           '&#9973;',   'commodityPorts',           'Commodity Ports'),
   webcams:                  def('webcams',                  '&#128247;', 'webcams',                  'Live Webcams'),
+  airports:                 def('airports',                 '&#9992;',   'airports',                 'Regional Airports'),
+  networkOutage:            def('networkOutage',            '&#128225;', 'networkOutage',            'Network Outages'),
+  gpsOutage:                def('gpsOutage',                '&#128225;', 'gpsOutage',                'GPS Outages'),
 };
 
 export const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
@@ -72,6 +75,7 @@ export const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
     'outages', 'cyberThreats', 'natural', 'fires',
     'waterways', 'economic', 'minerals', 'gpsJamming',
     'satellites', 'ciiChoropleth', 'dayNight', 'webcams',
+    'airports', 'networkOutage', 'gpsOutage',
   ],
   tech: [
     'startupHubs', 'techHQs', 'accelerators', 'cloudRegions',

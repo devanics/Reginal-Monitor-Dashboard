@@ -62,6 +62,9 @@ export interface MapLayers {
   processingPlants: boolean;
   commodityPorts: boolean;
   webcams: boolean;
+  airports: boolean;
+  networkOutage: boolean;
+  gpsOutage: boolean;
 }
 
 export type MapRenderer = 'flat' | 'globe';

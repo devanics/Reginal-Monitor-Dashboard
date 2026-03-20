@@ -98,6 +98,9 @@ export class DeckGLMap {
       webcams: { type: 'scatterplot', endpoint: '/api/webcams', color: [34, 197, 94], radius: 1000 },
       ciiChoropleth: { type: 'scatterplot', endpoint: '/api/ciiChoropleth', color: [255, 100, 100], radius: 4000 },
       dayNight: { type: 'scatterplot', endpoint: '/api/dayNight', color: [255, 255, 100], radius: 5000 },
+      airports: { type: 'scatterplot', endpoint: '/api/airports-status', color: [234, 179, 8], radius: 4500 },
+      networkOutage: { type: 'scatterplot', endpoint: '/api/outages', color: [244, 63, 94], radius: 3500 },
+      gpsOutage: { type: 'geojson', endpoint: '/api/gps-jamming', color: [251, 191, 36, 120] },
     };
 
     return configs[key] || { type: 'scatterplot', endpoint: `/api/${key}`, color: [150, 150, 150], radius: 3000 };
