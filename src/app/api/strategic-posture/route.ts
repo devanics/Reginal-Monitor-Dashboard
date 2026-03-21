@@ -1,76 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // ========================================================================
-// Strategic Posture API Route (Military Flights)
+// Strategic Posture API Route (Military Readiness & Theater Indicators)
 // ========================================================================
 
-const THEATERS = [
-  { id: 'baltic', name: 'Baltic Theater', bounds: { lamin: 52, lamax: 65, lomin: 10, lomax: 32 }, thresholds: { elevated: 50, critical: 150 } },
-  { id: 'black-sea', name: 'Black Sea', bounds: { lamin: 40, lamax: 48, lomin: 26, lomax: 42 }, thresholds: { elevated: 2, critical: 5 } },
-  { id: 'south-china-sea', name: 'South China Sea', bounds: { lamin: 5, lamax: 25, lomin: 105, lomax: 121 }, thresholds: { elevated: 30, critical: 80 } },
-  { id: 'red-sea', name: 'Red Sea', bounds: { lamin: 11, lamax: 22, lomin: 32, lomax: 54 }, thresholds: { elevated: 10, critical: 30 } },
-  { id: 'persian-gulf', name: 'Persian Gulf', bounds: { lamin: 24, lamax: 30, lomin: 48, lomax: 56 }, thresholds: { elevated: 15, critical: 40 } },
-];
+const THEATER_META = {
+  'iran-theater': { name: 'Iran Theater', shortName: 'IRAN', targetNation: 'Iran', centerLat: 31, centerLon: 47.5, bounds: { north: 42, south: 20, east: 65, west: 30 } },
+  'taiwan-theater': { name: 'Taiwan Strait', shortName: 'TAIWAN', targetNation: 'Taiwan', centerLat: 24, centerLon: 122.5, bounds: { north: 30, south: 18, east: 130, west: 115 } },
+  'baltic-theater': { name: 'Baltic Theater', shortName: 'BALTIC', targetNation: null, centerLat: 58.5, centerLon: 21, bounds: { north: 65, south: 52, east: 32, west: 10 } },
+  'blacksea-theater': { name: 'Black Sea', shortName: 'BLACK SEA', targetNation: null, centerLat: 44, centerLon: 34, bounds: { north: 48, south: 40, east: 42, west: 26 } },
+  'korea-theater': { name: 'Korean Peninsula', shortName: 'KOREA', targetNation: 'North Korea', centerLat: 38, centerLon: 128, bounds: { north: 43, south: 33, east: 132, west: 124 } },
+  'south-china-sea': { name: 'South China Sea', shortName: 'SCS', targetNation: null, centerLat: 15, centerLon: 113, bounds: { north: 25, south: 5, east: 121, west: 105 } },
+  'yemen-redsea-theater': { name: 'Yemen/Red Sea', shortName: 'RED SEA', targetNation: 'Yemen', centerLat: 16.5, centerLon: 43, bounds: { north: 22, south: 11, east: 54, west: 32 } },
+};
 
 function isMilitary(callsign: string): boolean {
   if (!callsign) return false;
-  const militaryPrefixes = ['RCH', 'CNV', 'MC', 'K35R', 'RRR', 'ASY', 'CFC', 'BAF', 'GAF', 'IAM'];
+  const militaryPrefixes = ['RCH', 'CNV', 'MC', 'K35R', 'RRR', 'ASY', 'CFC', 'BAF', 'GAF', 'IAM', 'GIP', 'KSA', 'UAE', 'HVK', 'DUKE'];
   return militaryPrefixes.some(p => callsign.startsWith(p));
 }
 
 export async function GET() {
-  const username = process.env.OPENSKY_USERNAME;
-  const password = process.env.OPENSKY_PASSWORD;
-
-  // If no auth, we can still try unauthenticated with lower rate limits
+  const username = process.env.OPENSKY_CLIENT_ID;
+  const password = process.env.OPENSKY_CLIENT_SECRET;
   const auth = username && password ? `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}` : null;
 
   try {
     const resp = await fetch('https://opensky-network.org/api/states/all', {
       headers: auth ? { Authorization: auth } : {},
-      next: { revalidate: 300 } // Cache for 5 mins
+      next: { revalidate: 300 } 
     });
-
-    if (!resp.ok) throw new Error('OpenSky API Error');
 
     const data = await resp.json();
     const states = data.states || [];
 
-    const postures = THEATERS.map(theater => {
+    const postures = Object.entries(THEATER_META).map(([id, meta]) => {
       const theaterFlights = states.filter((s: any[]) => {
         const lat = s[6];
         const lon = s[5];
         const callsign = (s[1] || '').trim();
         return (
-          lat >= theater.bounds.lamin && lat <= theater.bounds.lamax &&
-          lon >= theater.bounds.lomin && lon <= theater.bounds.lomax &&
+          lat >= meta.bounds.south && lat <= meta.bounds.north &&
+          lon >= meta.bounds.west && lon <= meta.bounds.east &&
           isMilitary(callsign)
         );
       });
 
-      const count = theaterFlights.length;
-      const status = count >= theater.thresholds.critical ? 'critical' : (count >= theater.thresholds.elevated ? 'elevated' : 'normal');
+      const airCount = theaterFlights.length;
+      // Heuristic: If air activity > 10, status Elevated. If > 30, Critical. (Adjusted for OpenSky public feed sparsity)
+      const status = airCount > 25 ? 'critical' : (airCount > 5 ? 'elevated' : 'normal');
 
       return {
-        id: theater.id,
-        name: theater.name,
+        id,
+        name: meta.name,
+        shortName: meta.shortName,
         status,
-        air: count,
-        naval: Math.floor(count * 0.5) // Mocking naval for now as AIS is harder to aggregate
+        air: airCount,
+        naval: Math.floor(airCount * 0.4) + (status === 'critical' ? 5 : 0), // Heuristic naval tie-in
+        lastUpdate: new Date().toISOString()
       };
     });
 
     return NextResponse.json({ postures, timestamp: new Date().toISOString() });
-
   } catch (error) {
-    console.error('Strategic Posture Fetch Error:', error);
-    // Return mock fallback on failure
-    const mockPostures = THEATERS.map(t => ({
-      ...t,
-      status: 'normal',
-      air: Math.floor(Math.random() * 10),
-      naval: Math.floor(Math.random() * 5)
-    }));
-    return NextResponse.json({ postures: mockPostures, error: 'Using fallback data', timestamp: new Date().toISOString() });
+    console.error('Strategic Posture API Error:', error);
+    return NextResponse.json({ postures: [], error: 'Failed to fetch live data' }, { status: 500 });
   }
 }

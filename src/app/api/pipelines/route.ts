@@ -4,34 +4,65 @@ import { NextRequest, NextResponse } from 'next/server';
 // Pipelines API Route (Energy Infrastructure)
 // ========================================================================
 
-export async function GET() {
-  const eiaKey = process.env.EIA_API_KEY;
+const PIPELINES = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [[54.3, 24.4], [50.6, 26.2]]
+      },
+      properties: { id: 'adcop', name: 'Abu Dhabi Crude Oil Pipeline', status: 'OPERATIONAL', capacity: '1.5M bpd' }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [[50.1, 26.3], [38.2, 24.1]]
+      },
+      properties: { id: 'ewp', name: 'East-West Pipeline', status: 'OPERATIONAL', capacity: '5.0M bpd' }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [[49.6, 25.9], [37.8, 24.0]]
+      },
+      properties: { id: 'petroline', name: 'Petroline (Abqaiq-Yanbu)', status: 'OPERATIONAL', capacity: '4.8M bpd' }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [[52.1, 23.9], [25.1, 25.1]]
+      },
+      properties: { id: 'dolphin', name: 'Dolphin Gas Pipeline', status: 'OPERATIONAL', capacity: '2.0B cfpd' }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [[35.0, 31.0], [33.0, 32.5]]
+      },
+      properties: { id: 'emg', name: 'East Mediterranean Gas (EMG)', status: 'OPERATIONAL' }
+    }
+  ]
+};
 
-  if (!eiaKey) {
-    return NextResponse.json({
-      pipelines: [
-        { id: 'adcop', name: 'Abu Dhabi Crude Oil Pipeline', status: 'operational', capacity: '1.5M bpd', flow: '1.2M bpd', trend: 'stable' },
-        { id: 'tapline', name: 'Trans-Arabian Pipeline', status: 'offline', capacity: '0.5M bpd', flow: '0M bpd', trend: 'stable' },
-        { id: 'ewp', name: 'East-West Pipeline', status: 'operational', capacity: '5.0M bpd', flow: '4.8M bpd', trend: 'rising' }
-      ]
-    });
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const format = searchParams.get('format');
+
+  if (format === 'geojson') {
+    return NextResponse.json(PIPELINES);
   }
 
-  try {
-    // In a real implementation with EIA key, we would fetch actual regional data
-    const url = `https://api.eia.gov/v2/total-energy/data/?api_key=${eiaKey}&frequency=monthly&data[0]=value&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=10`;
-    
-    // For this dashboard's scope, we'll return stylized pipeline data based on regional insights
-    return NextResponse.json({
-      pipelines: [
-        { id: 'adcop', name: 'Abu Dhabi Crude Oil Pipeline', status: 'operational', capacity: '1.5M bpd', flow: '1.3M bpd', trend: 'rising' },
-        { id: 'ewp', name: 'East-West Pipeline', status: 'operational', capacity: '5.0M bpd', flow: '4.7M bpd', trend: 'stable' },
-        { id: 'petroline', name: 'Petroline (Abqaiq-Yanbu)', status: 'operational', capacity: '4.8M bpd', flow: '4.5M bpd', trend: 'stable' }
-      ]
-    });
-
-  } catch (error) {
-    console.error('EIA Fetch Error:', error);
-    return NextResponse.json({ error: 'Failed to fetch pipeline data' }, { status: 500 });
-  }
+  // Legacy flat format fallback
+  return NextResponse.json(PIPELINES.features.map(f => ({
+    id: f.properties.id,
+    name: f.properties.name,
+    status: f.properties.status,
+    coords: f.geometry.coordinates
+  })));
 }
