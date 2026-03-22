@@ -7,7 +7,7 @@ export async function GET() {
             `https://newsapi.org/v2/everything?q=%2BSaudi%20%2BArabia&sortBy=publishedAt`,
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.NEWS_API_KEY}`
+                    Authorization: `Bearer d71aceb982e14dc69457d39dfbd5ee4d`
                 },
                 next: { revalidate: 300 }
             }
@@ -91,4 +91,4 @@ export async function GET() {
             { status: 200 }
         );
     }
-}
+}

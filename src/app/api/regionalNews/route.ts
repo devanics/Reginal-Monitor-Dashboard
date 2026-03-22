@@ -17,7 +17,6 @@ export async function GET() {
     }
 
     const data = await news.json();
-    console.log(data , "data in regionalNews ===================" , process.env.NEWSDATA_API_KEY);
     
     const articles = (data.results || []).slice(0, 5).map((a: any) => a.title).join("\n");
 
@@ -27,7 +26,6 @@ export async function GET() {
 
     // 2. generate AI summary using Open Router
     const openRouterKey = process.env.OPENROUTER_API_KEY;
-    console.log(openRouterKey , "openRouterKeyopenRouterKeyopenRouterKey ===================");
     
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
@@ -59,7 +57,6 @@ export async function GET() {
     }
 
     const aiData = await ai.json();
-    console.log(aiData , "aiDataaiDataaiData ===================");
     
     const summary = aiData.choices?.[0]?.message?.content || "Conflict summary currently unavailable. 🟡";
 
