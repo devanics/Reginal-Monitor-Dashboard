@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 
-let NEWSDATA_API_KEY= "pub_3bf010deae2144a4839b92d31fe31826"
+let NEWSDATA_API_KEY= process.env.NEXT_PUBLIC_NEWSDATA_API_KEY
 export async function GET() {
   try {
     // 1. fetch latest news for KSA only

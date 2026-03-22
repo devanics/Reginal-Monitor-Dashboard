@@ -21,6 +21,8 @@ export default function OilPrices() {
         fetch('/api/oil-prices')
             .then((r) => r.json())
             .then((json) => {
+                console.log(json.grades, "json.gradesjson.gradesjson.gradesjson.gradesjson.grades");
+
                 if (json.grades) setGrades(json.grades);
                 setLoading(false);
             })
@@ -32,7 +34,7 @@ export default function OilPrices() {
 
     return (
         <div className="flex flex-col gap-2 bg-gray-900 h-60 overflow-scroll rounded-lg p-1">
-             <h2 className="text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase px-1">Oil Prices</h2>
+            <h2 className="text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase px-1">Oil Prices</h2>
             <div className="grid grid-cols-1 gap-2">
                 {grades.map((grade) => {
                     const isPositive = grade.change >= 0;

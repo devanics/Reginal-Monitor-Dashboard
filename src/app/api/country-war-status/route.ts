@@ -35,8 +35,8 @@ async function fetchNewsHeadlinesFor(query: string) {
         //     return (j.articles || []).map((a: any) => a.title).filter(Boolean).slice(0, 6);
         // }
 
-        if (process.env.NEWSDATA_API_KEY) {
-            const url = `https://newsdata.io/api/1/latest?apikey=${process.env.NEWSDATA_API_KEY}&q=${encodeURIComponent(query)}`;
+        if (process.env.NEXT_PUBLIC_NEWSDATA_API_KEY) {
+            const url = `https://newsdata.io/api/1/latest?apikey=${process.env.NEXT_PUBLIC_NEWSDATA_API_KEY}&q=${encodeURIComponent(query)}`;
             const r = await fetch(url);
             if (!r.ok) return [];
             const j = await r.json();
