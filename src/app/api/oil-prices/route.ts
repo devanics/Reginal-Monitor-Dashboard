@@ -1,10 +1,10 @@
 // Saudi Aramco grade differentials vs Arab Light benchmark ($/bbl, typical market values)
 const GRADES = [
   { code: 'ASL', name: 'Arabian Super Light', diff: +3.50, gravity: 50.6 },
-  { code: 'AXL', name: 'Arabian Extra Light',  diff: +1.80, gravity: 38.0 },
-  { code: 'AL',  name: 'Arabian Light',        diff:  0.00, gravity: 33.4 },
-  { code: 'AM',  name: 'Arabian Medium',        diff: -1.50, gravity: 30.4 },
-  { code: 'AH',  name: 'Arabian Heavy',         diff: -4.00, gravity: 27.0 },
+  { code: 'AXL', name: 'Arabian Extra Light', diff: +1.80, gravity: 38.0 },
+  { code: 'AL', name: 'Arabian Light', diff: 0.00, gravity: 33.4 },
+  { code: 'AM', name: 'Arabian Medium', diff: -1.50, gravity: 30.4 },
+  { code: 'AH', name: 'Arabian Heavy', diff: -4.00, gravity: 27.0 },
 ];
 
 // Deterministic sparkline seeded by price so it stays stable across re-renders
