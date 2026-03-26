@@ -11,6 +11,7 @@ export default function RegionalSummary() {
       fetch('/api/regionalNews')
         .then((res) => res.json())
         .then((data) => {
+          
           setSummary(data.summary || "Summary currently unavailable. 🟡");
         })
         .catch(() => {

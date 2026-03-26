@@ -33,7 +33,7 @@ export default function AirlineIntelligenceWidget() {
     }, [activeTab]);
 
     return (
-        <div className="widget-card flex flex-col h-[500px] bg-[#0a0a0a]/90 border border-white/5 rounded-none overflow-hidden font-sans">
+        <div className="widget-card flex flex-col h-60 bg-[#0a0a0a]/90 border border-white/5 rounded-none overflow-y-auto font-sans">
             {/* Header */}
             <div className="px-4 pt-4 pb-2 border-b border-white/5">
                 <div className="flex items-center justify-between mb-4">
@@ -92,22 +92,21 @@ export default function AirlineIntelligenceWidget() {
                         ))}
 
                         {activeTab === 'flights' && data.map((item: any) => (
-                          <div key={item.num} className="flex items-center justify-between px-4 py-3 border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
-                              <div className="flex items-center gap-4 flex-1">
-                                  <span className="text-[12px] font-bold text-blue-400 font-mono w-14">{item.num}</span>
-                                  <span className="text-[11px] text-gray-300 font-medium">{item.route}</span>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                  <span className="text-[10px] text-gray-500 font-mono">{item.time}</span>
-                                  <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-sm ${
-                                      item.status === 'boarding' ? 'text-blue-400' :
-                                      item.status === 'departed' ? 'text-purple-400' :
-                                      'text-gray-500'
-                                  }`}>
-                                      {item.status.toUpperCase()}
-                                  </span>
-                              </div>
-                          </div>
+                            <div key={item.num} className="flex items-center justify-between px-4 py-3 border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                                <div className="flex items-center gap-4 flex-1">
+                                    <span className="text-[12px] font-bold text-blue-400 font-mono w-14">{item.num}</span>
+                                    <span className="text-[11px] text-gray-300 font-medium">{item.route}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] text-gray-500 font-mono">{item.time}</span>
+                                    <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-sm ${item.status === 'boarding' ? 'text-blue-400' :
+                                            item.status === 'departed' ? 'text-purple-400' :
+                                                'text-gray-500'
+                                        }`}>
+                                        {item.status.toUpperCase()}
+                                    </span>
+                                </div>
+                            </div>
                         ))}
 
                     </div>

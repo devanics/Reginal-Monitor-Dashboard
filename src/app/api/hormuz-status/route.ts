@@ -18,7 +18,7 @@ export async function GET() {
       // Simulated real-time metrics based on typical Hormuz traffic patterns
       const baseRisk = 5 + (Math.random() * 10);
       const risk = Math.round(isPeak ? baseRisk + 5 : baseRisk);
-      console.log("Strait of Hormuz",risk)
+
       const status = risk > 10 ? 'CONGESTED' : 'CLEAR';
       
       const description = status === 'CLEAR' 

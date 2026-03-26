@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 
 
+let NEWSDATA_API_KEY= process.env.NEXT_PUBLIC_NEWSDATA_API_KEY
 export async function GET() {
   try {
     // 1. fetch latest news for KSA only
     const news = await fetch(
-      `https://newsdata.io/api/1/latest?apikey=${process.env.NEWSDATA_API_KEY}&country=sa&q=saudi+OR+riyadh+OR+jeddah+OR+conflict+OR+unrest+OR+clashes`,
+      `https://newsdata.io/api/1/latest?apikey=${NEWSDATA_API_KEY}&country=sa&q=saudi+OR+riyadh+OR+jeddah+OR+conflict+OR+unrest+OR+clashes`,
       {
         next: { revalidate: 900 } // refresh every 15 minutes
       }
@@ -16,6 +17,7 @@ export async function GET() {
     }
 
     const data = await news.json();
+    
     const articles = (data.results || []).slice(0, 5).map((a: any) => a.title).join("\n");
 
     if (!articles) {
@@ -51,6 +53,7 @@ export async function GET() {
     }
 
     const aiData = await ai.json();
+    
     const summary = aiData.choices?.[0]?.message?.content || "Conflict summary currently unavailable. 🟡";
 
     return NextResponse.json({

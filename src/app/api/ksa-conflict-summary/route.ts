@@ -2,23 +2,24 @@ export const revalidate = 300; // 5 minutes
 
 export async function GET() {
     try {
-        // Fetch news related to conflicts near KSA
+        // Fetch news related to conflicts near KSA using NewsData (newsdata.io)
+        const NEWSDATA_API_KEY = process.env.NEXT_PUBLIC_NEWSDATA_API_KEY;
+        if (!NEWSDATA_API_KEY) {
+            throw new Error('NEWSDATA_API_KEY not configured');
+        }
+
         const newsRes = await fetch(
-            `https://newsapi.org/v2/everything?q=%2BSaudi%20%2BArabia&sortBy=publishedAt`,
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.NEWS_API_KEY}`
-                },
-                next: { revalidate: 300 }
-            }
+            `https://newsdata.io/api/1/latest?apikey=${NEWSDATA_API_KEY}&country=sa&q=saudi+OR+riyadh+OR+jeddah+OR+conflict+OR+unrest+OR+clashes`,
+            { next: { revalidate: 900 } }
         );
 
+
         if (!newsRes.ok) {
-            throw new Error(`News API responded with ${newsRes.status}`);
+            throw new Error(`NewsData API responded with ${newsRes.status}`);
         }
 
         const news = await newsRes.json();
-        const articles = (news.articles || [])
+        const articles = (news.results || [])
             .filter((a: any) => {
                 const searchStr = `${a.title} ${a.description} ${a.content}`.toLowerCase();
                 return searchStr.includes('saudi') || searchStr.includes('ksa') || searchStr.includes('riyadh');
@@ -73,7 +74,7 @@ export async function GET() {
         const relevantTitles = aiData.relevant_titles || [];
 
         // Filter the keyword-filtered articles further by AI's relevance choice
-        const filteredArticles = articles.filter((a: any) => 
+        const filteredArticles = articles.filter((a: any) =>
             relevantTitles.includes(a.title)
         );
 
@@ -88,4 +89,4 @@ export async function GET() {
             { status: 200 }
         );
     }
-}
+}

@@ -53,7 +53,7 @@ export default function RegionalCountryInstability() {
     if (loading) return <div className="widget-card animate-pulse h-[600px] bg-white/5"></div>;
 
     return (
-        <div className="widget-card flex flex-col h-full bg-black/40 border-l-0 border-r-0 rounded-none max-h-[800px]">
+        <div className="widget-card flex flex-col bg-black/40 border-l-0 border-r-0 rounded-none h-60">
             <div className="widget-header border-b border-white/5 pb-2 sticky top-0 bg-[#0a0a0a] z-10 px-4 pt-3">
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2">
