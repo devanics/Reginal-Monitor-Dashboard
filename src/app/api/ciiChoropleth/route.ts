@@ -4,28 +4,29 @@ import { NextResponse } from 'next/server';
 // Country Instability Index (CII) Scores API
 // ========================================================================
 
-const BASE_CII = [
-  { code: 'SA', name: 'Saudi Arabia', score: 22, level: 'low', trend: 'stable' },
-  { code: 'YE', name: 'Yemen', score: 94, level: 'critical', trend: 'stable' },
-  { code: 'IR', name: 'Iran', score: 76, level: 'high', trend: 'rising' },
-  { code: 'IL', name: 'Israel', score: 84, level: 'critical', trend: 'rising' },
-  { code: 'SY', name: 'Syria', score: 91, level: 'critical', trend: 'stable' },
-  { code: 'IQ', name: 'Iraq', score: 62, level: 'elevated', trend: 'falling' },
-  { code: 'LB', name: 'Lebanon', score: 87, level: 'critical', trend: 'rising' },
-  { code: 'JO', name: 'Jordan', score: 45, level: 'normal', trend: 'stable' },
-  { code: 'EG', name: 'Egypt', score: 55, level: 'elevated', trend: 'rising' },
-  { code: 'TR', name: 'Turkey', score: 50, level: 'normal', trend: 'stable' },
-  { code: 'UA', name: 'Ukraine', score: 98, level: 'critical', trend: 'stable' },
-  { code: 'RU', name: 'Russia', score: 74, level: 'high', trend: 'stable' },
-  { code: 'PK', name: 'Pakistan', score: 68, level: 'elevated', trend: 'rising' },
-  { code: 'AF', name: 'Afghanistan', score: 82, level: 'critical', trend: 'stable' },
-  { code: 'SD', name: 'Sudan', score: 96, level: 'critical', trend: 'rising' },
-  { code: 'MM', name: 'Myanmar', score: 89, level: 'critical', trend: 'stable' },
-  { code: 'VE', name: 'Venezuela', score: 65, level: 'elevated', trend: 'stable' },
-  { code: 'MX', name: 'Mexico', score: 58, level: 'elevated', trend: 'rising' },
-  { code: 'NG', name: 'Nigeria', score: 71, level: 'high', trend: 'rising' },
-  { code: 'SO', name: 'Somalia', score: 92, level: 'critical', trend: 'stable' }
-];
+// Baseline Risk Constants (aligned with Intelligence API)
+const BASELINE_RISK: Record<string, number> = {
+  US: 5, RU: 35, CN: 25, UA: 50, IR: 40, IL: 45, TW: 30, KP: 45,
+  SA: 20, TR: 25, PL: 10, DE: 5, FR: 10, GB: 5, IN: 20, PK: 35,
+  SY: 50, YE: 50, MM: 45, VE: 40, CU: 45, MX: 35, BR: 15, AE: 10,
+  BH: 15, OM: 10, QA: 12, KW: 15
+};
+
+const BASE_CII = Object.entries(BASELINE_RISK).map(([code, score]) => {
+  let level: 'low' | 'normal' | 'elevated' | 'high' | 'critical' = 'low';
+  if (score >= 70) level = 'critical';
+  else if (score >= 55) level = 'high';
+  else if (score >= 40) level = 'elevated';
+  else if (score >= 25) level = 'normal';
+
+  return {
+    code,
+    name: code === 'SA' ? 'Saudi Arabia' : code, // Expansion logic can be added
+    score,
+    level,
+    trend: 'stable'
+  };
+});
 
 export async function GET() {
   try {

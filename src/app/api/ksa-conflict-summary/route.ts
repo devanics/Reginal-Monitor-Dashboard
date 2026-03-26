@@ -33,20 +33,17 @@ export async function GET() {
             return Response.json({ summary: "No immediate threats detected in KSA. 🟢" });
         }
 
-        // Generate AI summary and FILTER for strictly relevant news using Open Router
-        const openRouterKey = process.env.OPENROUTER_API_KEY;
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+        // Generate AI summary and FILTER for strictly relevant news using OpenAI
+        const openaiKey = process.env.OPENAI_API_KEY;
 
-        const aiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + openRouterKey,
-                'HTTP-Referer': baseUrl,
-                'X-Title': 'Regional Monitor Dashboard'
+                Authorization: "Bearer " + openaiKey,
             },
             body: JSON.stringify({
-                model: "openai/gpt-4o-mini",
+                model: "gpt-4o-mini",
                 response_format: { type: "json_object" },
                 messages: [
                     {
@@ -67,7 +64,7 @@ export async function GET() {
         });
 
         if (!aiRes.ok) {
-            throw new Error(`Open Router API responded with ${aiRes.status}`);
+            throw new Error(`OpenAI API responded with ${aiRes.status}`);
         }
 
         const ai = await aiRes.json();

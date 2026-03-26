@@ -25,7 +25,7 @@ export default function CountryWarStatus() {
         .catch(console.error);
 
     load();
-    const interval = setInterval(load, 600000);
+    const interval = setInterval(load, 300000);
     return () => clearInterval(interval);
   }, []);
 
