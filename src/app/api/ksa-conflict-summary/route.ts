@@ -19,12 +19,14 @@ export async function GET() {
         }
 
         const news = await newsRes.json();
+
         const articles = (news.results || [])
             .filter((a: any) => {
                 const searchStr = `${a.title} ${a.description} ${a.content}`.toLowerCase();
                 return searchStr.includes('saudi') || searchStr.includes('ksa') || searchStr.includes('riyadh');
             })
             .slice(0, 8);
+
 
         const headlines = articles
             .map((a: any) => a.title)
@@ -33,6 +35,7 @@ export async function GET() {
         if (articles.length === 0) {
             return Response.json({ summary: "No immediate threats detected in KSA. 🟢" });
         }
+
 
         // Generate AI summary and FILTER for strictly relevant news using OpenAI
         const openaiKey = process.env.OPENAI_API_KEY;
@@ -50,11 +53,11 @@ export async function GET() {
                     {
                         role: "system",
                         content:
-                            "You are a strict intelligence analyst. Analyze the provided news headlines and respond in JSON format. \n" +
+                            "You are an intelligence reporting analyst. Analyze the provided news headlines and respond in JSON format. \n" +
                             "Output schema: { \"summary\": string, \"relevant_titles\": string[] }\n\n" +
                             "Rules:\n" +
-                            "1. 'summary': Choose ONLY news where Saudi Arabia (KSA) is the MAIN SUBJECT. Summarize the Saudi-specific situation in 5-10 words with a stoplight emoji (🔴🟡🟢). If no strictly relevant news, summary should be 'No immediate threats detected in KSA. 🟢'.\n" +
-                            "2. 'relevant_titles': An array of titles from the provided list that are strictly and primarily about Saudi Arabia's security, economy, or direct impact. Exclude news mostly about other countries or general regional tensions unless KSA is the protagonist."
+                            "1. 'summary': Summarize the general Saudi-related news situation in 5-10 words with a stoplight emoji (🔴 for severe threats, 🟡 for elevated tensions, 🟢 for normal/stable). If no relevant news, summary should be 'No major KSA events reported. 🟢'.\n" +
+                            "2. 'relevant_titles': An array of ALL titles from the provided list that are reasonably related to Saudi Arabia (KSA) in any way (e.g. diplomacy, economy, general news, or security). Do NOT be overly strict. Include articles involving KSA alongside other regional actors."
                     },
                     {
                         role: "user",
