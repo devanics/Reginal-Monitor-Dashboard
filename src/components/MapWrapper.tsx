@@ -31,10 +31,10 @@ export default function MapWrapper() {
   }, []);
 
   return (
-    <div className="widget-card h-60 flex flex-col relative overflow-hidden">
+    <div className="widget-card h-60 flex-shrink-0 flex flex-col relative overflow-hidden">
       <div
         ref={containerRef}
-        className="flex-1 w-full h-full min-h-[400px] relative deckgl-mode"
+        className="flex-1 w-full h-full min-h-[240px] relative deckgl-mode"
       />
       <div className="p-2 border-t border-white/5 bg-black/30 flex justify-between items-center text-[8px] text-gray-500">
         <span>RENDER: DECK.GL + MAPLIBRE-GL</span>
