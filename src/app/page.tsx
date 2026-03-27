@@ -115,7 +115,7 @@ export default function Home() {
          {/* Main Grid Content */}
          <main className="main-content">
             {/* Left Column: KSA Segment */}
-            <div className="">
+            <div className="column">
                {/* Row 1: AI News Summary */}
                <div className="grid grid-cols-2 gap-3">
                   <KSANewsSummary />
