@@ -78,6 +78,7 @@ export default function XFeedWidget() {
                   <span className="text-[10px] font-bold text-white leading-none">{tweet.user.name}</span>
                   <span className="text-[9px] text-gray-500">@{tweet.user.username}</span>
                 </div>
+                <h1></h1>
                 {/* <span className="ml-auto text-[9px] text-gray-600 font-mono">
                   {new Date(tweet.tweet_time || tweet.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span> */}
