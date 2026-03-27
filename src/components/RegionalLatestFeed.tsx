@@ -46,13 +46,7 @@ export default function RegionalLatestFeed() {
         <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
       </div>
 
-      {/* Status Summary */}
-      <div className="p-2 bg-orange-500/5 border-b border-white/5">
-        <div className="text-[9px] text-gray-400 font-bold uppercase mb-1">Region Summary</div>
-        <div className="text-[10px] leading-tight text-white italic">
-          "Elevated multi-theatre activity across the Gulf — monitoring ongoing."
-        </div>
-      </div>
+      
 
       {/* Feed list */}
       <div className="widget-content !p-0 flex-1 overflow-y-auto">

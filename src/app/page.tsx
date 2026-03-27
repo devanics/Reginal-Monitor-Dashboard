@@ -29,6 +29,7 @@ import RegionalCountryInstability from "@/components/RegionalCountryInstability"
 import KSAMajorAirports from "@/components/KSAMajorAirports";
 import InfraMonitor from "@/components/InfraMonitor";
 import CyberThreats from "@/components/CyberThreats";
+import XFeedWidget from "@/components/XFeedWidget";
 
 
 export default function Home() {
@@ -44,10 +45,16 @@ export default function Home() {
    // }, []);
 
    useEffect(() => {
-      fetch('/api/pizza-index')
-         .then(res => res.json())
-         .then(setPizzaData)
-         .catch(console.error);
+      const fetchPizza = () => {
+         fetch('/api/pizza-index')
+            .then(res => res.json())
+            .then(setPizzaData)
+            .catch(console.error);
+      };
+
+      fetchPizza();
+      const interval = setInterval(fetchPizza, 300000);
+      return () => clearInterval(interval);
    }, []);
 
 
@@ -108,7 +115,7 @@ export default function Home() {
          {/* Main Grid Content */}
          <main className="main-content">
             {/* Left Column: KSA Segment */}
-            <div className="">
+            <div className="column">
                {/* Row 1: AI News Summary */}
                <div className="grid grid-cols-2 gap-3">
                   <KSANewsSummary />
@@ -145,6 +152,9 @@ export default function Home() {
                <div className="bg-black flex gap-2">
                   <LiveStreamPlayer mode="news" />
                   <LiveStreamPlayer mode="webcams" />
+               </div>
+               <div className="mt-3">
+                  <XFeedWidget />
                </div>
             </div>
 

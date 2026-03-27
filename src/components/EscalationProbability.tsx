@@ -20,7 +20,7 @@ export default function EscalationProbability() {
     };
 
     fetchProbability();
-    const interval = setInterval(fetchProbability, 600000); // 10 mins
+    const interval = setInterval(fetchProbability, 300000); // 5 mins
     return () => clearInterval(interval);
   }, []);
 

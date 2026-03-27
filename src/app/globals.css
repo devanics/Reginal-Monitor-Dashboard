@@ -35,13 +35,14 @@
   --overlay-heavy: rgba(255, 255, 255, 0.2);
 }
 
-body {
+html, body {
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--font-mono);
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Dashboard Layout Grid */
@@ -51,6 +52,7 @@ body {
   height: 100vh;
   padding: 12px;
   gap: 12px;
+  overflow: hidden;
 }
 
 .top-nav {
@@ -90,6 +92,7 @@ body {
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
+  min-height: 0;
 }
 
 /* Widget Base Styles */

@@ -7,13 +7,19 @@ export default function InfraMonitor() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/infra-monitor')
-      .then(res => res.json())
-      .then(json => {
-        setData(json);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    const fetchData = () => {
+      fetch('/api/infra-monitor')
+        .then(res => res.json())
+        .then(json => {
+          setData(json);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 300000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) return <div className="widget-card p-3 animate-pulse bg-white/5 h-[100px] border-gray-800" />;

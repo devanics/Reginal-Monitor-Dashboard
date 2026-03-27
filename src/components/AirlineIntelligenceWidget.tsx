@@ -28,6 +28,8 @@ export default function AirlineIntelligenceWidget() {
 
     useEffect(() => {
         fetchData(activeTab);
+        const interval = setInterval(() => fetchData(activeTab), 300000);
+        return () => clearInterval(interval);
     }, [activeTab]);
 
     return (

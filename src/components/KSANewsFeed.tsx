@@ -59,10 +59,7 @@ const KSANewsFeed = () => {
         <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
       </div>
 
-      <div className="p-2 bg-yellow-500/5 border-b border-white/5">
-        <div className="text-[9px] text-gray-400 font-bold uppercase mb-1">Status Summary</div>
-        <div className="text-[10px] leading-tight text-white italic">"Elevated activity near western borders; commercial hubs remain stable."</div>
-      </div>
+      
 
       <div className="widget-content !p-0 flex-1 overflow-y-auto">
         {isLoading ? (
