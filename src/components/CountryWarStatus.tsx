@@ -49,8 +49,8 @@ export default function CountryWarStatus() {
     }
 
     load();
-    const id = setInterval(load, POLL_MS);
-    return () => { mounted = false; clearInterval(id); };
+    const interval = setInterval(load, 300000);
+    return () => clearInterval(interval);
   }, []);
 
   console.log(status , "statusstatusstatusstatusstatus");

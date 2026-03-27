@@ -106,17 +106,16 @@ export async function GET(req: NextRequest) {
         // });
 
 
+ const openaiKey = process.env.OPENAI_API_KEY;
 
-        resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
+        resp = await fetch("https://api.openai.com/v1/chat/completions", {
+           method: "POST",
             headers: {
-                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'Content-Type': 'application/json',
-                'HTTP-Referer': "http://localhost:3000",
-                'X-Title': 'Regional Monitor Dashboard'
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + openaiKey,
             },
             body: JSON.stringify({
-                model: 'openai/gpt-4o-mini',
+                model: 'gpt-4o-mini',
                 messages: [
                     {
                         role: 'system',
@@ -131,10 +130,11 @@ export async function GET(req: NextRequest) {
                 temperature: 0
             })
         });
+        console.log(resp)
 
 
     } catch (fetchErr: any) {
-        console.error('OpenRouter fetch failed:', fetchErr?.message || fetchErr);
+        console.error('OpenAI fetch failed:', fetchErr?.message || fetchErr);
         // fallback to heuristic if model is unreachable
         const text = (iranHeadlines.join(' ') + ' ' + saudiHeadlines.join(' ') + ' ' + usaHeadlines.join(' ')).toLowerCase();
         const getStatus = (keywords: string[]) => keywords.some(k => text.includes(k));
